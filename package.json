@@ -4,8 +4,8 @@
   "description": "Kid-friendly Gold Star Barcode Scanner & Reward System",
   "main": "server.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && rm -rf docs && cp -r dist docs",
+    "dev": "cp index.source.html index.html && vite",
+    "build": "cp index.source.html index.html && vite build && rm -rf docs && cp -r dist docs && cp dist/index.html index.html && cp -r dist/assets . && cp dist/favicon.svg . && cp dist/manifest.json . && cp dist/404.html . && cp dist/.nojekyll .",
     "preview": "vite preview",
     "start": "node server.js",
     "test": "node test/react-app.test.js"

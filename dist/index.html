@@ -8,11 +8,23 @@
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#F59E0B">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Starbook">
   <meta name="description" content="Kid-friendly Gold Star Barcode Scanner & Double-Entry Reward Banking System with local storage.">
   
+  <!-- Suppress Tailwind CDN production notice -->
+  <script>
+    (function() {
+      const origWarn = console.warn;
+      console.warn = function(...args) {
+        if (typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) return;
+        origWarn.apply(console, args);
+      };
+    })();
+  </script>
+
   <!-- Tailwind CSS CDN for utility classes -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
