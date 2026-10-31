@@ -5,10 +5,12 @@ import ParentPendingTab from './ParentPendingTab';
 import ParentBankTab from './ParentBankTab';
 import ParentStatementTab from './ParentStatementTab';
 import ParentTokensTab from './ParentTokensTab';
+import ParentSettingsTab from './ParentSettingsTab';
 import ParentDebuggerTab from './ParentDebuggerTab';
 
 export default function ParentDashboard() {
-  const { activeParentTab, setCurrentView } = useStarbook();
+  const { activeParentTab, setActiveParentTab, setCurrentView, data } = useStarbook();
+  const childName = data.settings?.childName || 'Alex';
 
   return (
     <div id="view-parent" className="space-y-6">
@@ -20,14 +22,23 @@ export default function ParentDashboard() {
             🔒
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-2xl font-black text-slate-800 font-kid">Parent Control Center</h2>
+              <button
+                onClick={() => setActiveParentTab('settings')}
+                className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300 transition flex items-center gap-1"
+                title="Click to edit child name & settings"
+              >
+                <span>🧒</span>
+                <span>Child: <strong>{childName}</strong></span>
+                <span>✏️</span>
+              </button>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase">
                 Unlocked
               </span>
             </div>
             <p className="text-xs text-slate-500 font-medium">
-              Review chores, manage bank account rewards, and audit transaction records.
+              Managing <strong>{childName}</strong>'s star bank, chore approvals, and rewards.
             </p>
           </div>
         </div>
@@ -49,6 +60,7 @@ export default function ParentDashboard() {
         {activeParentTab === 'bank' && <ParentBankTab />}
         {activeParentTab === 'statement' && <ParentStatementTab />}
         {activeParentTab === 'tokens' && <ParentTokensTab />}
+        {activeParentTab === 'settings' && <ParentSettingsTab />}
         {activeParentTab === 'debugger' && <ParentDebuggerTab />}
       </div>
 

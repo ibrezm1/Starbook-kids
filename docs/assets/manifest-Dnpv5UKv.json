@@ -1,0 +1,17 @@
+{
+  "short_name": "Starbook",
+  "name": "Starbook Kids - Gold Star Barcode Scanner & Reward System",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#4F46E5",
+  "theme_color": "#F59E0B",
+  "display": "standalone",
+  "orientation": "portrait"
+}
+

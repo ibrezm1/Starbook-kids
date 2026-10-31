@@ -15,7 +15,8 @@ export default function ParentNavTabs() {
     { id: 'pending', label: 'Pending Approvals', icon: '⏳', badge: pendingCount },
     { id: 'bank', label: 'Star Bank & Cash Out', icon: '🪙' },
     { id: 'statement', label: 'Bank Statement', icon: '🏛️' },
-    { id: 'tokens', label: 'Printable Tokens', icon: '🖨️' },
+    { id: 'tokens', label: 'Printable Tokens & Simulator', icon: '🖨️' },
+    { id: 'settings', label: 'Kid Profile & Settings', icon: '⚙️' },
     { id: 'debugger', label: 'Diagnostics & Health', icon: '🔧' }
   ];
 

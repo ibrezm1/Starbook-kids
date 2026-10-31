@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { STORAGE_KEY, getDefaultData, ALL_RECOGNIZED_ITEMS } from '../utils/constants';
+import { STORAGE_KEY, getDefaultData, ALL_RECOGNIZED_ITEMS, CHORE_BARCODES, DEFAULT_REWARDS, LEGACY_SIMULATED_ITEMS } from '../utils/constants';
 import {
   calculatePoints as calcPts,
   createTransaction,
@@ -22,6 +22,7 @@ export function StarbookProvider({ children }) {
         if (raw) {
           const parsed = JSON.parse(raw);
           if (!parsed.settings) parsed.settings = {};
+          if (!parsed.settings.childName) parsed.settings.childName = 'Alex';
           if (!parsed.settings.accountNumber) {
             parsed.settings.accountNumber = `ACCT-7734-${(parsed.settings.childName || 'ALEX').toUpperCase()}`;
           }
@@ -29,6 +30,12 @@ export function StarbookProvider({ children }) {
           if (!parsed.pendingStars) parsed.pendingStars = [];
           if (!parsed.history) parsed.history = [];
           if (!parsed.cashOutLog) parsed.cashOutLog = [];
+          if (!parsed.customRewards || !Array.isArray(parsed.customRewards) || parsed.customRewards.length === 0) {
+            parsed.customRewards = DEFAULT_REWARDS;
+          }
+          if (!parsed.customChores || !Array.isArray(parsed.customChores) || parsed.customChores.length === 0) {
+            parsed.customChores = CHORE_BARCODES;
+          }
           if (!parsed.ledger || parsed.ledger.length === 0) {
             const now = Date.now();
             parsed.ledger = [
@@ -586,18 +593,25 @@ export function StarbookProvider({ children }) {
     showToast(`Gifted +${count} ${tier} star(s) to bank! 🎁`, 'success');
   }, [showToast]);
 
+  // Get all recognized items (custom chores + defaults)
+  const getAllRecognizedItems = useCallback(() => {
+    const custom = data.customChores || CHORE_BARCODES;
+    return [...custom, ...LEGACY_SIMULATED_ITEMS];
+  }, [data.customChores]);
+
   // Debug Barcode Injector
   const injectDebugBarcode = useCallback((code, mode = 'pending') => {
-    const matched = ALL_RECOGNIZED_ITEMS.find(i => i.code.toLowerCase() === code.toLowerCase());
+    const allItems = getAllRecognizedItems();
+    const matched = allItems.find(i => i.code.toLowerCase() === code.toLowerCase());
     const tier = matched ? matched.tier : 'gold';
-    const reason = matched ? matched.reason : `Debug Test: ${code}`;
+    const reason = matched ? (matched.reason || matched.title || matched.name) : `Debug Test: ${code}`;
     const icon = matched ? matched.icon : '🏷️';
 
     if (mode === 'pending') {
       const newStar = {
         id: `star_debug_${Date.now()}`,
         barcode: code,
-        barcodeName: matched ? matched.name : 'Debug Barcode',
+        barcodeName: matched ? (matched.title || matched.name) : 'Debug Barcode',
         reason,
         icon,
         tier,
@@ -648,7 +662,7 @@ export function StarbookProvider({ children }) {
       confettiEngine.burst(window.innerWidth / 2, window.innerHeight * 0.45, 30, 'stars');
       showToast(`Deposited +1 ${tier} star (${code}) directly to Bank! ⭐`, 'success');
     }
-  }, [showToast]);
+  }, [getAllRecognizedItems, showToast]);
 
   // Reconcile Balances from Ledger
   const reconcileBalances = useCallback(() => {
@@ -728,11 +742,165 @@ export function StarbookProvider({ children }) {
     }
   }, [showToast]);
 
-  const updateSettings = useCallback((newSettings) => {
+  // Customize Child Name
+  const setChildName = useCallback((name) => {
+    const trimmed = (name || '').trim() || 'Alex';
+    setData(prev => {
+      const newSettings = {
+        ...prev.settings,
+        childName: trimmed,
+        accountNumber: `ACCT-7734-${trimmed.toUpperCase()}`
+      };
+      return { ...prev, settings: newSettings };
+    });
+    soundController.playPop();
+    showToast(`Child profile set to "${trimmed}"! 🧒⭐`, 'success');
+  }, [showToast]);
+
+  // Reward Catalog Actions
+  const addReward = useCallback((newReward) => {
+    const id = `rew_${Date.now()}`;
+    const rewardItem = {
+      id,
+      name: newReward.name?.trim() || 'Custom Reward',
+      icon: newReward.icon || '🎁',
+      cost: {
+        gold: Math.max(0, parseInt(newReward.cost?.gold || 0, 10)),
+        silver: Math.max(0, parseInt(newReward.cost?.silver || 0, 10)),
+        bronze: Math.max(0, parseInt(newReward.cost?.bronze || 0, 10))
+      }
+    };
     setData(prev => ({
       ...prev,
-      settings: { ...prev.settings, ...newSettings }
+      customRewards: [...(prev.customRewards || []), rewardItem]
     }));
+    soundController.playPop();
+    showToast(`Added reward: "${rewardItem.name}"! 🎁`, 'success');
+  }, [showToast]);
+
+  const updateReward = useCallback((rewardId, updatedFields) => {
+    setData(prev => ({
+      ...prev,
+      customRewards: (prev.customRewards || []).map(r => {
+        if (r.id !== rewardId) return r;
+        return {
+          ...r,
+          name: updatedFields.name?.trim() || r.name,
+          icon: updatedFields.icon || r.icon,
+          cost: {
+            gold: Math.max(0, parseInt(updatedFields.cost?.gold ?? r.cost?.gold ?? 0, 10)),
+            silver: Math.max(0, parseInt(updatedFields.cost?.silver ?? r.cost?.silver ?? 0, 10)),
+            bronze: Math.max(0, parseInt(updatedFields.cost?.bronze ?? r.cost?.bronze ?? 0, 10))
+          }
+        };
+      })
+    }));
+    soundController.playPop();
+    showToast('Reward updated in catalog! ✨', 'success');
+  }, [showToast]);
+
+  const deleteReward = useCallback((rewardId) => {
+    setData(prev => ({
+      ...prev,
+      customRewards: (prev.customRewards || []).filter(r => r.id !== rewardId)
+    }));
+    soundController.playPop();
+    showToast('Reward removed from catalog. 🗑️', 'info');
+  }, [showToast]);
+
+  const resetRewards = useCallback(() => {
+    setData(prev => ({
+      ...prev,
+      customRewards: DEFAULT_REWARDS
+    }));
+    soundController.playPop();
+    showToast('Reset rewards to default catalog! 🔄', 'info');
+  }, [showToast]);
+
+  // Chore Barcode Simulator Actions
+  const addChoreBarcode = useCallback((newChore) => {
+    const rawCode = (newChore.code || `${newChore.tier || 'bronze'}-${newChore.title || 'CHORE'}-${Date.now().toString().slice(-4)}`)
+      .toUpperCase()
+      .replace(/[^A-Z0-9\-\.\$\/\+\%\*]/g, '-');
+    
+    const tier = newChore.tier || 'bronze';
+    const pts = (data.settings?.starValues || { gold: 4, silver: 2, bronze: 1 })[tier] || 1;
+
+    const choreItem = {
+      code: rawCode,
+      title: newChore.title?.trim() || 'New Chore',
+      name: newChore.name?.trim() || newChore.title?.trim() || 'Chore Token',
+      icon: newChore.icon || '⭐',
+      tier,
+      points: pts,
+      reason: newChore.reason?.trim() || newChore.title?.trim() || 'Completed Chore',
+      desc: newChore.desc?.trim() || 'Custom chore completed'
+    };
+
+    setData(prev => {
+      const existing = prev.customChores || [];
+      const filtered = existing.filter(c => c.code.toUpperCase() !== rawCode);
+      return {
+        ...prev,
+        customChores: [...filtered, choreItem]
+      };
+    });
+    soundController.playPop();
+    showToast(`Added chore barcode: "${choreItem.title}" (${choreItem.code})! 🏷️`, 'success');
+  }, [data.settings?.starValues, showToast]);
+
+  const updateChoreBarcode = useCallback((code, updatedFields) => {
+    setData(prev => ({
+      ...prev,
+      customChores: (prev.customChores || []).map(c => {
+        if (c.code.toUpperCase() !== code.toUpperCase()) return c;
+        const tier = updatedFields.tier || c.tier;
+        const pts = (prev.settings?.starValues || { gold: 4, silver: 2, bronze: 1 })[tier] || 1;
+        return {
+          ...c,
+          title: updatedFields.title?.trim() || c.title,
+          name: updatedFields.name?.trim() || updatedFields.title?.trim() || c.name,
+          icon: updatedFields.icon || c.icon,
+          tier,
+          points: pts,
+          reason: updatedFields.reason?.trim() || c.reason,
+          desc: updatedFields.desc?.trim() || c.desc
+        };
+      })
+    }));
+    soundController.playPop();
+    showToast('Chore barcode updated! ✨', 'success');
+  }, [showToast]);
+
+  const deleteChoreBarcode = useCallback((code) => {
+    setData(prev => ({
+      ...prev,
+      customChores: (prev.customChores || []).filter(c => c.code.toUpperCase() !== code.toUpperCase())
+    }));
+    soundController.playPop();
+    showToast(`Chore barcode "${code}" removed! 🗑️`, 'info');
+  }, [showToast]);
+
+  const resetChoreBarcodes = useCallback(() => {
+    setData(prev => ({
+      ...prev,
+      customChores: CHORE_BARCODES
+    }));
+    soundController.playPop();
+    showToast('Reset chore tokens to default barcodes! 🔄', 'info');
+  }, [showToast]);
+
+  const updateSettings = useCallback((newSettings) => {
+    setData(prev => {
+      const merged = { ...prev.settings, ...newSettings };
+      if (newSettings.childName) {
+        merged.accountNumber = `ACCT-7734-${newSettings.childName.trim().toUpperCase()}`;
+      }
+      return {
+        ...prev,
+        settings: merged
+      };
+    });
     showToast('Settings saved! ⚙️', 'success');
   }, [showToast]);
 
@@ -766,7 +934,17 @@ export function StarbookProvider({ children }) {
     importBackupJSON,
     generateSyncCode,
     applySyncCode,
-    updateSettings
+    updateSettings,
+    setChildName,
+    addReward,
+    updateReward,
+    deleteReward,
+    resetRewards,
+    addChoreBarcode,
+    updateChoreBarcode,
+    deleteChoreBarcode,
+    resetChoreBarcodes,
+    getAllRecognizedItems
   };
 
   return (

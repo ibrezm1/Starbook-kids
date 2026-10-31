@@ -5,7 +5,8 @@ import { barcodeGenerator } from '../../utils/barcode';
 import { soundController } from '../../utils/audio';
 
 export default function BarcodeBinderModal() {
-  const { activeModal, closeModal, injectDebugBarcode } = useStarbook();
+  const { data, activeModal, closeModal, injectDebugBarcode } = useStarbook();
+  const chores = data.customChores || CHORE_BARCODES;
 
   const isOpen = activeModal === 'barcodeBinder';
   if (!isOpen) return null;
@@ -40,22 +41,24 @@ export default function BarcodeBinderModal() {
         {/* Binder Cards Container */}
         <div className="p-5 overflow-y-auto flex-1 bg-slate-50">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {CHORE_BARCODES.map(card => {
+            {chores.map(card => {
               const svgMarkup = barcodeGenerator.generateSVG(card.code, { width: 220, height: 65 });
+              const tier = card.tier || 'bronze';
+              const points = (data.settings?.starValues || { gold: 4, silver: 2, bronze: 1 })[tier] || 1;
 
               return (
-                <div key={card.code} className={`binder-card tier-${card.tier} bg-white p-3.5 rounded-2xl border-2 border-slate-200 shadow-sm flex flex-col justify-between`}>
+                <div key={card.code} className={`binder-card tier-${tier} bg-white p-3.5 rounded-2xl border-2 border-slate-200 shadow-sm flex flex-col justify-between`}>
                   <div>
                     <div className="binder-card-header flex items-start gap-2.5">
                       <span className="text-3xl">{card.icon}</span>
                       <div className="flex-1">
                         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${
-                          card.tier === 'gold' ? 'bg-amber-100 text-amber-800' : (card.tier === 'silver' ? 'bg-slate-200 text-slate-800' : 'bg-orange-100 text-orange-800')
+                          tier === 'gold' ? 'bg-amber-100 text-amber-800' : (tier === 'silver' ? 'bg-slate-200 text-slate-800' : 'bg-orange-100 text-orange-800')
                         }`}>
-                          {card.tier} ({card.points} pt{card.points > 1 ? 's' : ''})
+                          {tier} ({points} pt{points > 1 ? 's' : ''})
                         </span>
-                        <h4 className="font-extrabold text-slate-800 text-sm mt-1 leading-snug">{card.title}</h4>
-                        <p className="text-[11px] text-slate-500">{card.desc}</p>
+                        <h4 className="font-extrabold text-slate-800 text-sm mt-1 leading-snug">{card.title || card.name}</h4>
+                        <p className="text-[11px] text-slate-500">{card.desc || card.reason}</p>
                       </div>
                     </div>
 

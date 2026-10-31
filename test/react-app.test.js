@@ -159,3 +159,51 @@ test('Exchange and breakdown math preserves value neutrality', () => {
   assert.strictEqual(calculatePoints(bank), 4, 'Points must remain 4');
 });
 
+// 5. Test Child Name Customization, Custom Rewards, and Barcode Simulator Customization
+test('Supports kid name customization, custom reward catalog, and chore barcode additions', () => {
+  const code = fs.readFileSync(path.join(__dirname, '../src/utils/constants.js'), 'utf8');
+  const cleanCode = code.replace(/export\s+function\s+/g, 'function ').replace(/export\s+const\s+/g, 'const ');
+  const evalFunc = new Function(`${cleanCode}; return { getDefaultData, DEFAULT_REWARDS, CHORE_BARCODES };`);
+  const { getDefaultData, DEFAULT_REWARDS, CHORE_BARCODES } = evalFunc();
+
+  const data = getDefaultData();
+  
+  // A. Child name customization
+  assert.strictEqual(data.settings.childName, 'Alex');
+  data.settings.childName = 'Sophia';
+  data.settings.accountNumber = `ACCT-7734-${data.settings.childName.toUpperCase()}`;
+  assert.strictEqual(data.settings.childName, 'Sophia');
+  assert.strictEqual(data.settings.accountNumber, 'ACCT-7734-SOPHIA');
+
+  // B. Custom Reward Catalog addition and editing
+  assert.ok(data.customRewards.length >= 6);
+  const newReward = {
+    id: 'rew_custom_99',
+    name: 'Trampoline Park Hour',
+    icon: '🤸',
+    cost: { gold: 2, silver: 1, bronze: 0 }
+  };
+  data.customRewards.push(newReward);
+  const foundReward = data.customRewards.find(r => r.id === 'rew_custom_99');
+  assert.ok(foundReward);
+  assert.strictEqual(foundReward.name, 'Trampoline Park Hour');
+  assert.strictEqual(foundReward.cost.gold, 2);
+
+  // C. Custom Chore Barcode additions
+  assert.ok(data.customChores.length >= 18);
+  const newChore = {
+    code: 'CHORE-PIANO-01',
+    title: 'Practice Piano 15m',
+    name: 'Piano Practice Token',
+    icon: '🎹',
+    tier: 'silver',
+    points: 2,
+    reason: 'Practiced Piano 15 Minutes'
+  };
+  data.customChores.push(newChore);
+  const foundChore = data.customChores.find(c => c.code === 'CHORE-PIANO-01');
+  assert.ok(foundChore);
+  assert.strictEqual(foundChore.title, 'Practice Piano 15m');
+  assert.strictEqual(foundChore.tier, 'silver');
+});
+

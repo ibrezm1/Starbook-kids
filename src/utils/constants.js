@@ -80,6 +80,7 @@ export function getDefaultData() {
       starValues: { gold: 4, silver: 2, bronze: 1 }
     },
     bank: initialBank,
+    customChores: CHORE_BARCODES,
     pendingStars: [
       {
         id: `star_${now - 1000 * 60 * 15}`,

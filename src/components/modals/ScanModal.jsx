@@ -4,7 +4,7 @@ import { ALL_RECOGNIZED_ITEMS } from '../../utils/constants';
 import { soundController } from '../../utils/audio';
 
 export default function ScanModal() {
-  const { activeModal, closeModal, openModal, applySyncCode, showToast } = useStarbook();
+  const { data, activeModal, closeModal, openModal, applySyncCode, showToast, getAllRecognizedItems } = useStarbook();
   const [cameraActive, setCameraActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const videoRef = useRef(null);
@@ -24,13 +24,14 @@ export default function ScanModal() {
       return;
     }
 
-    const matched = ALL_RECOGNIZED_ITEMS.find(i => i.code.toLowerCase() === barcode.toLowerCase());
+    const allItems = getAllRecognizedItems ? getAllRecognizedItems() : ALL_RECOGNIZED_ITEMS;
+    const matched = allItems.find(i => i.code.toLowerCase() === barcode.toLowerCase());
     const payload = {
       barcode,
-      name: matched ? matched.name : 'Scanned Barcode',
+      name: matched ? (matched.title || matched.name) : 'Scanned Barcode',
       icon: matched ? matched.icon : '🏷️',
       tier: matched ? matched.tier : 'bronze',
-      reason: matched ? matched.reason : `Completed ${barcode}`
+      reason: matched ? (matched.reason || matched.title || matched.name) : `Completed ${barcode}`
     };
 
     closeModal();
@@ -166,30 +167,23 @@ export default function ScanModal() {
             <span className="text-[10px] text-slate-400 font-normal">Tap to simulate scan</span>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => handleBarcodeFound('BRONZE-TEETH-01')}
-              className="p-2.5 bg-white rounded-xl border border-amber-200 text-left hover:border-amber-400 transition"
-            >
-              <span className="text-xl block mb-0.5">🪥</span>
-              <span className="font-extrabold text-xs text-slate-800 block">Brushed Teeth</span>
-              <span className="text-[10px] text-amber-700 font-bold">🥉 Bronze (1 pt)</span>
-            </button>
-            <button
-              onClick={() => handleBarcodeFound('SILVER-HW-01')}
-              className="p-2.5 bg-white rounded-xl border border-amber-200 text-left hover:border-amber-400 transition"
-            >
-              <span className="text-xl block mb-0.5">📚</span>
-              <span className="font-extrabold text-xs text-slate-800 block">Homework</span>
-              <span className="text-[10px] text-slate-600 font-bold">🥈 Silver (2 pts)</span>
-            </button>
-            <button
-              onClick={() => handleBarcodeFound('GOLD-ROOM-01')}
-              className="p-2.5 bg-white rounded-xl border border-amber-200 text-left hover:border-amber-400 transition"
-            >
-              <span className="text-xl block mb-0.5">🧹</span>
-              <span className="font-extrabold text-xs text-slate-800 block">Cleaned Room</span>
-              <span className="text-[10px] text-amber-800 font-bold">🥇 Gold (4 pts)</span>
-            </button>
+            {((data?.customChores && data.customChores.length > 0) ? data.customChores.slice(0, 3) : [
+              { code: 'BRONZE-TEETH-01', title: 'Brushed Teeth', icon: '🪥', tier: 'bronze' },
+              { code: 'SILVER-HW-01', title: 'Homework', icon: '📚', tier: 'silver' },
+              { code: 'GOLD-ROOM-01', title: 'Cleaned Room', icon: '🧹', tier: 'gold' }
+            ]).map(item => (
+              <button
+                key={item.code}
+                onClick={() => handleBarcodeFound(item.code)}
+                className="p-2.5 bg-white rounded-xl border border-amber-200 text-left hover:border-amber-400 transition"
+              >
+                <span className="text-xl block mb-0.5">{item.icon || '⭐'}</span>
+                <span className="font-extrabold text-xs text-slate-800 block truncate">{item.title || item.name}</span>
+                <span className="text-[10px] text-amber-700 font-bold capitalize">
+                  {item.tier === 'gold' ? '🥇 Gold (4 pts)' : (item.tier === 'silver' ? '🥈 Silver (2 pts)' : '🥉 Bronze (1 pt)')}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
