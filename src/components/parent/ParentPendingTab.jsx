@@ -72,27 +72,27 @@ export default function ParentPendingTab() {
                   </p>
                 </div>
 
-                <div className="card-actions flex items-center gap-2">
+                <div className="card-actions flex items-center gap-2 flex-wrap sm:flex-nowrap w-full md:w-auto">
                   <select
                     value={currentTier}
                     onChange={(e) => handleTierChange(star.id, e.target.value)}
-                    className="tier-adjust-select text-xs font-semibold rounded-lg px-2 py-1.5 border border-slate-300 bg-white"
+                    className="tier-adjust-select text-xs font-semibold rounded-xl px-3 py-2 border border-slate-300 bg-white flex-1 sm:flex-initial min-h-[42px]"
                   >
-                    <option value="gold">Gold Star (4 pts)</option>
-                    <option value="silver">Silver Star (2 pts)</option>
-                    <option value="bronze">Bronze Star (1 pt)</option>
+                    <option value="gold">🥇 Gold (4 pts)</option>
+                    <option value="silver">🥈 Silver (2 pts)</option>
+                    <option value="bronze">🥉 Bronze (1 pt)</option>
                   </select>
 
                   <button
                     onClick={() => approveStar(star.id, currentTier)}
-                    className="btn-approve-star btn-action-approve text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm transition"
+                    className="btn-approve-star btn-action-approve text-xs font-bold px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm transition flex-1 sm:flex-initial text-center justify-center flex items-center min-h-[42px]"
                   >
                     ✓ Approve
                   </button>
 
                   <button
                     onClick={() => rejectStar(star.id)}
-                    className="btn-reject-star btn-action-reject text-xs font-bold px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white shadow-sm transition"
+                    className="btn-reject-star btn-action-reject text-xs font-bold px-3.5 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white shadow-sm transition flex-1 sm:flex-initial text-center justify-center flex items-center min-h-[42px]"
                   >
                     ✕ Reject
                   </button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useStarbook } from '../../hooks/useStarbook';
 import { formatRelativeTime } from '../../utils/ledger';
 import { soundController } from '../../utils/audio';
@@ -7,6 +7,7 @@ export default function KidPassbook() {
   const { data, openModal } = useStarbook();
   const [filter, setFilter] = useState('all');
   const ledger = data.ledger || [];
+  const chipsTrackRef = useRef(null);
 
   // Calculate quick stats for kids
   let starsEarnedCount = 0;
@@ -33,9 +34,12 @@ export default function KidPassbook() {
     return true;
   });
 
-  const handleFilterClick = (newFilter) => {
+  const handleFilterClick = (newFilter, e) => {
     soundController.playPop();
     setFilter(newFilter);
+    if (e && e.currentTarget && chipsTrackRef.current) {
+      e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   };
 
   const handleEntryClick = (tx) => {
@@ -96,28 +100,28 @@ export default function KidPassbook() {
 
       {/* Filter Chips for Kid Transaction Book */}
       <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-amber-200/60 flex-wrap relative z-10">
-        <div className="flex items-center gap-1.5 overflow-x-auto py-1 text-xs">
+        <div ref={chipsTrackRef} className="flex items-center gap-1.5 overflow-x-auto py-1 text-xs no-scrollbar scroll-smooth">
           <button
-            onClick={() => handleFilterClick('all')}
-            className={`kid-passbook-filter-btn ${filter === 'all' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('all', e)}
+            className={`kid-passbook-filter-btn shrink-0 ${filter === 'all' ? 'active' : ''}`}
           >
             <span>🌟</span> All Activity
           </button>
           <button
-            onClick={() => handleFilterClick('credits')}
-            className={`kid-passbook-filter-btn ${filter === 'credits' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('credits', e)}
+            className={`kid-passbook-filter-btn shrink-0 ${filter === 'credits' ? 'active' : ''}`}
           >
             <span>⭐</span> Stars Won
           </button>
           <button
-            onClick={() => handleFilterClick('debits')}
-            className={`kid-passbook-filter-btn ${filter === 'debits' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('debits', e)}
+            className={`kid-passbook-filter-btn shrink-0 ${filter === 'debits' ? 'active' : ''}`}
           >
             <span>🍦</span> Treats Redeemed
           </button>
           <button
-            onClick={() => handleFilterClick('transfers')}
-            className={`kid-passbook-filter-btn ${filter === 'transfers' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('transfers', e)}
+            className={`kid-passbook-filter-btn shrink-0 ${filter === 'transfers' ? 'active' : ''}`}
           >
             <span>🚀</span> Level Ups & Changes
           </button>

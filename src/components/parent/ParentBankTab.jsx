@@ -138,21 +138,21 @@ export default function ParentBankTab() {
         </div>
 
         {/* 3 Bank Stars Pills */}
-        <div className="grid grid-cols-3 gap-3 mt-5 pt-4 border-t border-slate-800">
-          <div className="text-center p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
-            <span className="text-2xl">🥇</span>
-            <div className="text-lg font-black font-kid text-amber-400">{bank.gold || 0}</div>
-            <div className="text-[11px] text-slate-400 font-bold">Gold Stars (4 pts)</div>
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-5 pt-4 border-t border-slate-800">
+          <div className="text-center p-2.5 sm:p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
+            <span className="text-xl sm:text-2xl">🥇</span>
+            <div className="text-base sm:text-lg font-black font-kid text-amber-400">{bank.gold || 0}</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 font-bold truncate">Gold (4 pts)</div>
           </div>
-          <div className="text-center p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
-            <span className="text-2xl">🥈</span>
-            <div className="text-lg font-black font-kid text-slate-200">{bank.silver || 0}</div>
-            <div className="text-[11px] text-slate-400 font-bold">Silver Stars (2 pts)</div>
+          <div className="text-center p-2.5 sm:p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
+            <span className="text-xl sm:text-2xl">🥈</span>
+            <div className="text-base sm:text-lg font-black font-kid text-slate-200">{bank.silver || 0}</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 font-bold truncate">Silver (2 pts)</div>
           </div>
-          <div className="text-center p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
-            <span className="text-2xl">🥉</span>
-            <div className="text-lg font-black font-kid text-amber-600">{bank.bronze || 0}</div>
-            <div className="text-[11px] text-slate-400 font-bold">Bronze Stars (1 pt)</div>
+          <div className="text-center p-2.5 sm:p-3 rounded-2xl bg-slate-800/80 border border-slate-700">
+            <span className="text-xl sm:text-2xl">🥉</span>
+            <div className="text-base sm:text-lg font-black font-kid text-amber-600">{bank.bronze || 0}</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 font-bold truncate">Bronze (1 pt)</div>
           </div>
         </div>
 
@@ -160,13 +160,13 @@ export default function ParentBankTab() {
         <div className="mt-4 pt-3 border-t border-slate-800 flex items-center gap-2 flex-wrap">
           <button
             onClick={() => { soundController.playPop(); openModal('customCashout'); }}
-            className="text-xs font-bold px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black transition"
+            className="text-xs font-bold px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black transition flex-1 sm:flex-initial text-center justify-center flex items-center min-h-[42px]"
           >
             ➖ Custom Cash Out
           </button>
           <button
             onClick={() => { soundController.playPop(); openModal('manualStar'); }}
-            className="text-xs font-bold px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition"
+            className="text-xs font-bold px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition flex-1 sm:flex-initial text-center justify-center flex items-center min-h-[42px]"
           >
             ➕ Gift Bonus Stars
           </button>

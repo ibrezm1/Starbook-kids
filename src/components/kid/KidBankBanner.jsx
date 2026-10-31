@@ -35,19 +35,19 @@ export default function KidBankBanner() {
         </div>
 
         {/* Action & Points Badge */}
-        <div className="self-start md:self-auto flex items-center gap-3 flex-wrap">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto mt-2 md:mt-0">
           <button
             onClick={handleJumpToPassbook}
-            className="kid-banner-action-btn shadow-sm"
+            className="kid-banner-action-btn shadow-sm justify-center text-center py-2.5 px-4"
           >
             <span className="anim-wobble">📖</span> My Star Bank Book
           </button>
           
-          <div className="flex items-center gap-3 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 text-white px-5 py-3 rounded-2xl shadow-lg shadow-amber-200/50 anim-aura-pulse">
-            <span className="text-3xl anim-bounce-gentle">✨</span>
-            <div>
-              <div className="text-xs uppercase font-extrabold tracking-wider text-amber-100">Total Points</div>
-              <div className="text-3xl font-black leading-none font-kid">{totalPoints}</div>
+          <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 text-white px-5 py-2.5 rounded-2xl shadow-lg shadow-amber-200/50 anim-aura-pulse">
+            <span className="text-2xl sm:text-3xl anim-bounce-gentle">✨</span>
+            <div className="text-left">
+              <div className="text-[10px] sm:text-xs uppercase font-extrabold tracking-wider text-amber-100">Total Points</div>
+              <div className="text-2xl sm:text-3xl font-black leading-none font-kid">{totalPoints}</div>
             </div>
           </div>
         </div>

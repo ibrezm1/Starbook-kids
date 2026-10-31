@@ -33,9 +33,12 @@ export default function ParentStatementTab() {
     return true;
   });
 
-  const handleFilterClick = (newFilter) => {
+  const handleFilterClick = (newFilter, e) => {
     soundController.playPop();
     setFilter(newFilter);
+    if (e && e.currentTarget) {
+      e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   };
 
   return (
@@ -76,28 +79,28 @@ export default function ParentStatementTab() {
 
       {/* Filter and Search Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
-        <div className="flex items-center gap-1.5 overflow-x-auto py-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto py-1 no-scrollbar scroll-smooth">
           <button
-            onClick={() => handleFilterClick('all')}
-            className={`statement-filter-btn ${filter === 'all' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('all', e)}
+            className={`statement-filter-btn shrink-0 ${filter === 'all' ? 'active' : ''}`}
           >
             All Activity
           </button>
           <button
-            onClick={() => handleFilterClick('credits')}
-            className={`statement-filter-btn ${filter === 'credits' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('credits', e)}
+            className={`statement-filter-btn shrink-0 ${filter === 'credits' ? 'active' : ''}`}
           >
             + Deposits
           </button>
           <button
-            onClick={() => handleFilterClick('debits')}
-            className={`statement-filter-btn ${filter === 'debits' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('debits', e)}
+            className={`statement-filter-btn shrink-0 ${filter === 'debits' ? 'active' : ''}`}
           >
             - Withdrawals
           </button>
           <button
-            onClick={() => handleFilterClick('transfers')}
-            className={`statement-filter-btn ${filter === 'transfers' ? 'active' : ''}`}
+            onClick={(e) => handleFilterClick('transfers', e)}
+            className={`statement-filter-btn shrink-0 ${filter === 'transfers' ? 'active' : ''}`}
           >
             ⇄ Upgrades & Transfers
           </button>
