@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Starbook Kids - Gold Star Barcode Scanner & Reward System</title>
+  
+  <!-- Tailwind CSS CDN for utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            star: {
+              gold: '#F59E0B',
+              silver: '#94A3B8',
+              bronze: '#EA580C',
+              primary: '#6366F1',
+              accent: '#EC4899',
+              fun: '#10B981'
+            }
+          },
+          fontFamily: {
+            kid: ['"Fredoka"', 'system-ui', '-apple-system', 'sans-serif'],
+            sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Font: Fredoka for playful kid typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Optional html5-qrcode library for webcam scanning fallback -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gradient-to-b from-amber-50 via-sky-50 to-indigo-50 min-h-screen text-slate-800 antialiased selection:bg-amber-300 selection:text-amber-900">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 shadow-sm">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      
+      <!-- Logo & Branding -->
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="window.starbookApp?.switchView('kid')">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 flex items-center justify-center shadow-md shadow-amber-200 border-2 border-white">
+          <span class="text-2xl filter drop-shadow">⭐</span>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 font-kid">
+            Starbook
+          </h1>
+          <p id="display-child-name" class="text-xs font-bold text-slate-500 tracking-wide">Alex's Star Rewards</p>
+        </div>
+      </div>
+
+      <!-- Header Controls -->
+      <div class="flex items-center gap-2">
+        <!-- Sound FX Toggle Button -->
+        <button id="btn-sound-toggle" class="sound-toggle-btn p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition font-bold" title="Toggle Sound FX">
+          🔊
+        </button>
+
+        <!-- Kid Top Controls -->
+        <div id="topbar-kid-controls" class="flex items-center gap-2">
+          <button id="btn-switch-to-parent" class="btn-parent-gate flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs md:text-sm shadow-md transition transform active:scale-95">
+            <span>🔒</span>
+            <span>Parents</span>
+          </button>
+        </div>
+
+        <!-- Parent Top Controls (Hidden in kid mode) -->
+        <div id="topbar-parent-controls" class="hidden flex items-center gap-2">
+          <span class="hidden sm:inline-block px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 font-extrabold text-xs">
+            👑 Parent Mode
+          </span>
+          <button id="btn-switch-to-kid" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold text-xs md:text-sm shadow-md shadow-indigo-200 transition transform active:scale-95">
+            <span>🚀</span>
+            <span>Kid View</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main App Shell -->
+  <main class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- ========================================== -->
+    <!-- 1. KID INTERFACE VIEW                      -->
+    <!-- ========================================== -->
+    <div id="view-kid" class="space-y-6">
+
+      <!-- Kid Bank Balance Banner -->
+      <section class="kid-bank-card bg-white rounded-3xl p-5 md:p-6 shadow-xl border-4 border-amber-200/60 relative overflow-hidden">
+        <!-- Background decorative floating stars -->
+        <div class="absolute -right-6 -bottom-6 text-9xl opacity-10 pointer-events-none select-none">⭐</div>
+        <div class="absolute -left-4 -top-4 text-7xl opacity-5 pointer-events-none select-none">🌟</div>
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold uppercase tracking-wider mb-2">
+              <span>🏆</span> My Star Bank
+            </span>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 font-kid">
+              Your Approved Star Bank!
+            </h2>
+            <p class="text-sm font-medium text-slate-500">Scan barcodes for chores to earn more stars!</p>
+          </div>
+
+          <!-- Action & Points Badge -->
+          <div class="self-start md:self-auto flex items-center gap-3">
+            <button id="btn-jump-to-passbook" class="kid-banner-action-btn shadow-sm">
+              <span class="anim-wobble">📖</span> My Star Bank Book
+            </button>
+            <div class="flex items-center gap-3 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 text-white px-5 py-3 rounded-2xl shadow-lg shadow-amber-200/50 anim-aura-pulse">
+              <span class="text-3xl anim-bounce-gentle">✨</span>
+              <div>
+                <div class="text-xs uppercase font-extrabold tracking-wider text-amber-100">Total Points</div>
+                <div id="kid-bank-points" class="text-3xl font-black leading-none font-kid">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Star Counters (Gold, Silver, Bronze) -->
+        <div class="grid grid-cols-3 gap-3 md:gap-4 mt-5">
+          <!-- Gold Star -->
+          <div class="bank-star-pill gold">
+            <div class="star-pill-icon">🥇</div>
+            <div class="star-pill-info">
+              <span class="star-pill-label">Gold</span>
+              <span id="kid-bank-gold" class="star-pill-val">0</span>
+              <span class="star-pill-pts">4 pts each</span>
+            </div>
+          </div>
+
+          <!-- Silver Star -->
+          <div class="bank-star-pill silver">
+            <div class="star-pill-icon">🥈</div>
+            <div class="star-pill-info">
+              <span class="star-pill-label">Silver</span>
+              <span id="kid-bank-silver" class="star-pill-val">0</span>
+              <span class="star-pill-pts">2 pts each</span>
+            </div>
+          </div>
+
+          <!-- Bronze Star -->
+          <div class="bank-star-pill bronze">
+            <div class="star-pill-icon">🥉</div>
+            <div class="star-pill-info">
+              <span class="star-pill-label">Bronze</span>
+              <span id="kid-bank-bronze" class="star-pill-val">0</span>
+              <span class="star-pill-pts">1 pt each</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BIG SCAN BUTTON HERO -->
+      <section class="text-center py-4 md:py-6">
+        <div class="scan-button-wrapper inline-block">
+          <div class="scan-ripple-ring"></div>
+          <div class="scan-ripple-ring ring-2"></div>
+          <button id="btn-kid-scan-big" class="big-scan-btn group">
+            <div class="scan-btn-glow"></div>
+            <div class="scan-btn-inner">
+              <div class="scan-btn-icon-box">
+                <span class="text-5xl md:text-6xl anim-camera-rock group-hover:scale-110 transition-transform duration-300">📷</span>
+                <span class="barcode-overlay-icon">▌▌█║▌║█║</span>
+              </div>
+              <div class="scan-btn-text">
+                <span class="scan-btn-title">SCAN BARCODE</span>
+                <span class="scan-btn-sub">Tap to earn your Gold Star! ⭐</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- START EARNING BY STAR TIER (Bronze, Silver, Gold) -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl md:text-2xl font-black text-slate-800 font-kid flex items-center gap-2">
+              <span>⭐</span> Start Earning by Star Tier
+            </h3>
+            <p class="text-xs font-semibold text-slate-500">Pick a Bronze, Silver, or Gold chore to start earning right now!</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <!-- 1. BRONZE STAR TIER CARD -->
+          <div class="tier-starter-card bronze">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="tier-badge-pill bronze">
+                  <span>🥉</span> BRONZE STAR
+                </span>
+                <span class="text-xs font-extrabold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full">1 Point</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-lg font-kid">Quick Habits (5 Mins)</h4>
+              <p class="text-xs text-slate-500 mb-3">Easy daily wins that keep you on track!</p>
+
+              <!-- Quick Chore Chips -->
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <button class="tier-quick-chip" data-tier="bronze" data-reason="Brushed My Teeth" data-icon="🪥" data-code="CHORE-TEETH-03">
+                  <span>🪥</span> Brushed Teeth
+                </button>
+                <button class="tier-quick-chip" data-tier="bronze" data-reason="Made My Bed" data-icon="🛏️" data-code="CHORE-BED-10">
+                  <span>🛏️</span> Made Bed
+                </button>
+                <button class="tier-quick-chip" data-tier="bronze" data-reason="Put Toys Away" data-icon="🧸" data-code="ITEM-TOY-09">
+                  <span>🧸</span> Put Toys Away
+                </button>
+                <button class="tier-quick-chip" data-tier="bronze" data-reason="Put Shoes by Door" data-icon="👟" data-code="CHORE-SHOES-11">
+                  <span>👟</span> Shoes Away
+                </button>
+                <button class="tier-quick-chip" data-tier="bronze" data-reason="Drank Water / Healthy Snack" data-icon="💧" data-code="CHORE-WATER-12">
+                  <span>💧</span> Drank Water
+                </button>
+              </div>
+            </div>
+
+            <button class="btn-start-tier-action bronze btn-start-custom-tier" data-tier="bronze">
+              <span>🥉</span>
+              <span>Start Bronze Chore</span>
+            </button>
+          </div>
+
+          <!-- 2. SILVER STAR TIER CARD -->
+          <div class="tier-starter-card silver">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="tier-badge-pill silver">
+                  <span>🥈</span> SILVER STAR
+                </span>
+                <span class="text-xs font-extrabold text-slate-700 bg-slate-200 px-2 py-0.5 rounded-full">2 Points</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-lg font-kid">Daily Milestones</h4>
+              <p class="text-xs text-slate-500 mb-3">Great effort tasks that show responsibility!</p>
+
+              <!-- Quick Chore Chips -->
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <button class="tier-quick-chip" data-tier="silver" data-reason="Finished Homework" data-icon="📚" data-code="CHORE-HOMEWORK-02">
+                  <span>📚</span> Homework Done
+                </button>
+                <button class="tier-quick-chip" data-tier="silver" data-reason="Read for 20 Minutes" data-icon="📖" data-code="ITEM-BOOK-07">
+                  <span>📖</span> Read 20 Mins
+                </button>
+                <button class="tier-quick-chip" data-tier="silver" data-reason="Ate All My Veggies" data-icon="🥦" data-code="CHORE-VEGGIES-06">
+                  <span>🥦</span> Ate Veggies
+                </button>
+                <button class="tier-quick-chip" data-tier="silver" data-reason="Fed / Walked Pet" data-icon="🐕" data-code="CHORE-PET-05">
+                  <span>🐕</span> Pet Care
+                </button>
+                <button class="tier-quick-chip" data-tier="silver" data-reason="Practiced Instrument" data-icon="🎵" data-code="CHORE-MUSIC-13">
+                  <span>🎵</span> Music Practice
+                </button>
+              </div>
+            </div>
+
+            <button class="btn-start-tier-action silver btn-start-custom-tier" data-tier="silver">
+              <span>🥈</span>
+              <span>Start Silver Chore</span>
+            </button>
+          </div>
+
+          <!-- 3. GOLD STAR TIER CARD -->
+          <div class="tier-starter-card gold">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="tier-badge-pill gold">
+                  <span>🥇</span> GOLD STAR
+                </span>
+                <span class="text-xs font-extrabold text-amber-800 bg-amber-200 px-2 py-0.5 rounded-full">4 Points</span>
+              </div>
+              <h4 class="font-black text-slate-800 text-lg font-kid">Super Star Big Jobs!</h4>
+              <p class="text-xs text-slate-500 mb-3">Big chores & extraordinary helpful acts!</p>
+
+              <!-- Quick Chore Chips -->
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <button class="tier-quick-chip" data-tier="gold" data-reason="Cleaned Entire Bedroom" data-icon="🧹" data-code="CHORE-ROOM-01">
+                  <span>🧹</span> Deep Clean Room
+                </button>
+                <button class="tier-quick-chip" data-tier="gold" data-reason="Helped Family Member" data-icon="🤝" data-code="CHORE-HELP-08">
+                  <span>🤝</span> Kind Helper
+                </button>
+                <button class="tier-quick-chip" data-tier="gold" data-reason="Washed / Loaded Dishes" data-icon="🧽" data-code="CHORE-DISHES-14">
+                  <span>🧽</span> Kitchen Dishes
+                </button>
+                <button class="tier-quick-chip" data-tier="gold" data-reason="Folded & Put Laundry Away" data-icon="🧺" data-code="CHORE-LAUNDRY-15">
+                  <span>🧺</span> Fold Laundry
+                </button>
+              </div>
+            </div>
+
+            <button class="btn-start-tier-action gold btn-start-custom-tier" data-tier="gold">
+              <span>🥇</span>
+              <span>Start Gold Chore</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- STAR EXCHANGE STATION (Level Up Bronze & Silver Stars!) -->
+      <section class="bg-gradient-to-r from-amber-100 via-orange-100 to-amber-50 rounded-3xl p-5 md:p-6 border-2 border-amber-300/80 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center font-black text-lg shadow-sm">
+              ✨
+            </div>
+            <div>
+              <h3 class="text-lg md:text-xl font-black text-slate-800 font-kid">
+                Star Upgrade & Exchange Station
+              </h3>
+              <p class="text-xs font-semibold text-amber-900/80">Turn your Bronze stars into Silver, and Silver into Gold!</p>
+            </div>
+          </div>
+          <span class="text-xs font-extrabold text-amber-800 bg-white/80 px-3 py-1 rounded-full border border-amber-300">
+            Level Up Stars 🚀
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- Trade 2 Bronze -> 1 Silver -->
+          <div id="exchange-box-bronze" class="exchange-card">
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1 font-black text-xl">
+                <span>🥉🥉</span>
+                <span class="text-slate-400 font-sans mx-1 anim-arrow-shift">➔</span>
+                <span>🥈</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-slate-800 text-sm">2 Bronze ➔ 1 Silver Star</div>
+                <div id="exchange-bronze-hint" class="text-xs text-slate-500">Need 2 Bronze in bank</div>
+              </div>
+            </div>
+            <button id="btn-exchange-bronze-silver" class="btn-exchange disabled" disabled>
+              Trade for Silver 🥈
+            </button>
+          </div>
+
+          <!-- Trade 2 Silver -> 1 Gold -->
+          <div id="exchange-box-silver" class="exchange-card">
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1 font-black text-xl">
+                <span>🥈🥈</span>
+                <span class="text-slate-400 font-sans mx-1 anim-arrow-shift">➔</span>
+                <span>🥇</span>
+              </div>
+              <div>
+                <div class="font-extrabold text-slate-800 text-sm">2 Silver ➔ 1 Gold Star</div>
+                <div id="exchange-silver-hint" class="text-xs text-slate-500">Need 2 Silver in bank</div>
+              </div>
+            </div>
+            <button id="btn-exchange-silver-gold" class="btn-exchange disabled" disabled>
+              Trade for Gold 🥇
+            </button>
+          </div>
+        </div>
+
+        <!-- Currency Breakdown (Change Making) Row -->
+        <div class="mt-4 pt-3.5 border-t border-amber-200/70">
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="text-base">🔄</span>
+            <span class="text-xs font-black uppercase tracking-wider text-amber-900/80">Make Change / Break Down Stars</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <!-- Break 1 Gold -> 2 Silver -->
+            <div id="exchange-box-gold-break" class="exchange-card">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1 font-black text-xl">
+                  <span>🥇</span>
+                  <span class="text-slate-400 font-sans mx-1 anim-arrow-shift">➔</span>
+                  <span>🥈🥈</span>
+                </div>
+                <div>
+                  <div class="font-extrabold text-slate-800 text-sm">Break 1 Gold ➔ 2 Silver</div>
+                  <div id="exchange-gold-break-hint" class="text-xs text-slate-500">Need 1 Gold in bank</div>
+                </div>
+              </div>
+              <button id="btn-exchange-gold-silver" class="btn-exchange disabled" disabled>
+                Break to 2 Silver 🥈
+              </button>
+            </div>
+
+            <!-- Break 1 Silver -> 2 Bronze -->
+            <div id="exchange-box-silver-break" class="exchange-card">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1 font-black text-xl">
+                  <span>🥈</span>
+                  <span class="text-slate-400 font-sans mx-1 anim-arrow-shift">➔</span>
+                  <span>🥉🥉</span>
+                </div>
+                <div>
+                  <div class="font-extrabold text-slate-800 text-sm">Break 1 Silver ➔ 2 Bronze</div>
+                  <div id="exchange-silver-break-hint" class="text-xs text-slate-500">Need 1 Silver in bank</div>
+                </div>
+              </div>
+              <button id="btn-exchange-silver-bronze" class="btn-exchange disabled" disabled>
+                Break to 2 Bronze 🥉
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PENDING APPROVAL BOX (Kid's View) -->
+      <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 md:p-6 shadow-md border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">⏳</span>
+            <h3 class="text-lg md:text-xl font-black text-slate-800 font-kid">
+              Pending Approval Box
+            </h3>
+            <span id="kid-pending-count-badge" class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-black">
+              0
+            </span>
+          </div>
+          <span class="text-xs font-semibold text-slate-400">Waiting for Mom & Dad</span>
+        </div>
+
+        <!-- Pending Stars List -->
+        <div id="kid-pending-stars-list" class="space-y-2.5">
+          <!-- Filled by JS -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 📖 KID'S STAR TRANSACTION BOOK (PASSBOOK)  -->
+      <!-- ========================================== -->
+      <section id="section-kid-passbook" class="kid-passbook-card relative overflow-hidden rounded-3xl p-5 md:p-7 shadow-xl border-4 border-amber-300/80">
+        <!-- Floating background animated sparkles/stars -->
+        <div class="passbook-bg-stars pointer-events-none select-none">
+          <span class="anim-float-star star-1">✨</span>
+          <span class="anim-float-star star-2">⭐</span>
+          <span class="anim-float-star star-3">🌟</span>
+          <span class="anim-float-star star-4">💫</span>
+        </div>
+
+        <!-- Passbook Top Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 relative z-10">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-200 text-slate-900 flex items-center justify-center font-black text-2xl shadow-md border-2 border-amber-300 anim-bounce-gentle shrink-0">
+              📖
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-xl md:text-2xl font-black text-slate-800 font-kid">
+                  <span id="kid-passbook-title-name">Alex</span>'s Star Bank Book
+                </h3>
+                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-900 shadow-sm anim-pulse-glow">
+                  LIVE PASSBOOK
+                </span>
+              </div>
+              <p class="text-xs font-semibold text-amber-900/80">
+                Scroll through your official adventure records, stars earned, and treats unlocked! 📜
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Stats Pills for Kids -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="passbook-mini-stat bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Earned:</span>
+              <span id="kid-passbook-stat-earned" class="text-emerald-700 font-black font-kid">0</span>
+            </div>
+            <div class="passbook-mini-stat bg-rose-50 border border-rose-200 text-rose-800 px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5">
+              <span>🍦</span>
+              <span>Treats:</span>
+              <span id="kid-passbook-stat-spent" class="text-rose-700 font-black font-kid">0</span>
+            </div>
+            <div class="passbook-mini-stat bg-purple-50 border border-purple-200 text-purple-800 px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5">
+              <span>🚀</span>
+              <span>Upgrades:</span>
+              <span id="kid-passbook-stat-upgrades" class="text-purple-700 font-black font-kid">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Chips for Kid Transaction Book -->
+        <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-amber-200/60 flex-wrap relative z-10">
+          <div class="flex items-center gap-1.5 overflow-x-auto py-1 text-xs">
+            <button class="kid-passbook-filter-btn active" data-filter="all">
+              <span>🌟</span> All Activity
+            </button>
+            <button class="kid-passbook-filter-btn" data-filter="credits">
+              <span>⭐</span> Stars Won
+            </button>
+            <button class="kid-passbook-filter-btn" data-filter="debits">
+              <span>🍦</span> Treats Redeemed
+            </button>
+            <button class="kid-passbook-filter-btn" data-filter="transfers">
+              <span>🚀</span> Level Ups & Changes
+            </button>
+          </div>
+
+          <!-- Total Entries & Scroll Hint -->
+          <div class="flex items-center gap-2 text-xs font-extrabold text-amber-800/80">
+            <span class="anim-wobble">📜</span>
+            <span id="kid-passbook-count-text">Showing 0 entries</span>
+            <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">(Scroll down 👇)</span>
+          </div>
+        </div>
+
+        <!-- Scrollable Transaction Stream -->
+        <div id="kid-passbook-stream-container" class="kid-passbook-scrollable-container max-h-[460px] overflow-y-auto space-y-3 pr-1.5 relative z-10">
+          <!-- Filled dynamically by renderKidPassbook() -->
+        </div>
+
+        <!-- Empty State for Kid Passbook -->
+        <div id="kid-passbook-empty-state" class="hidden text-center py-10 px-4">
+          <div class="text-5xl mb-3 anim-bounce-gentle">⭐</div>
+          <h4 class="font-kid text-lg font-black text-slate-700">Your Star Bank Book is Ready for Adventures!</h4>
+          <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-4">
+            Scan your first chore barcode or pick a daily task above to earn your very first shiny star!
+          </p>
+          <button id="btn-passbook-start-first" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-900 font-black text-xs shadow-md transition transform hover:scale-105 font-kid">
+            🚀 Start My First Chore!
+          </button>
+        </div>
+      </section>
+
+      <!-- QUICK BARCODES SHELF (Simulated Barcodes for instant testing/play) -->
+      <section class="bg-gradient-to-r from-sky-50 to-indigo-50 rounded-3xl p-5 md:p-6 border border-sky-100 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⚡</span>
+              <h3 class="text-lg font-bold text-slate-800 font-kid">Quick Barcode Simulator</h3>
+            </div>
+            <p class="text-xs text-slate-500">No camera? Tap any physical item below to simulate a real scan!</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-open-barcode-binder" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-sm transition flex items-center gap-1.5">
+              <span>📚</span> Chore Barcode Binder
+            </button>
+            <button class="btn-sim-scan text-xs font-bold px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white shadow-sm transition" data-code="RANDOM">
+              🎲 Mystery Item
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <button class="btn-sim-scan quick-sim-card" data-code="CHORE-ROOM-01">
+            <span class="text-2xl">🧹</span>
+            <span class="font-bold text-xs text-slate-800">Cleaned Room</span>
+            <span class="text-[10px] text-slate-400 font-mono">CHORE-ROOM-01</span>
+          </button>
+
+          <button class="btn-sim-scan quick-sim-card" data-code="CHORE-HOMEWORK-02">
+            <span class="text-2xl">📚</span>
+            <span class="font-bold text-xs text-slate-800">Math Homework</span>
+            <span class="text-[10px] text-slate-400 font-mono">CHORE-HW-02</span>
+          </button>
+
+          <button class="btn-sim-scan quick-sim-card" data-code="CHORE-TEETH-03">
+            <span class="text-2xl">🪥</span>
+            <span class="font-bold text-xs text-slate-800">Brushed Teeth</span>
+            <span class="text-[10px] text-slate-400 font-mono">CHORE-TEETH-03</span>
+          </button>
+
+          <button class="btn-sim-scan quick-sim-card" data-code="ITEM-CEREAL-04">
+            <span class="text-2xl">🥣</span>
+            <span class="font-bold text-xs text-slate-800">Cereal Box</span>
+            <span class="text-[10px] text-slate-400 font-mono">ITEM-CEREAL-04</span>
+          </button>
+
+          <button class="btn-sim-scan quick-sim-card" data-code="CHORE-VEGGIES-06">
+            <span class="text-2xl">🥦</span>
+            <span class="font-bold text-xs text-slate-800">Ate All Veggies</span>
+            <span class="text-[10px] text-slate-400 font-mono">CHORE-VEG-06</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 2. PARENT INTERFACE VIEW (Protected)       -->
+    <!-- ========================================== -->
+    <div id="view-parent" class="hidden space-y-6">
+
+      <!-- Parent Header Banner -->
+      <section class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-amber-400 text-xs font-black tracking-wider uppercase mb-1">
+              <span>👑</span> Parent Control Dashboard
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">
+              Review Chores & Redeem Rewards
+            </h2>
+            <p class="text-slate-400 text-sm mt-1">
+              Approve pending stars, manage your child's bank, and log cashed-out rewards.
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2">
+            <button id="btn-open-manual-star-modal" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs shadow-md transition">
+              + Gift Extra Stars
+            </button>
+            <button id="btn-open-custom-cashout" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition">
+              🪙 Cash Out Reward
+            </button>
+          </div>
+        </div>
+
+        <!-- Parent Tabs Navigation -->
+        <div class="flex items-center gap-2 overflow-x-auto pt-6 mt-4 border-t border-slate-800">
+          <button class="parent-tab-btn active" data-tab="pending">
+            <span>⏳</span>
+            <span>Pending Approvals</span>
+            <span id="parent-pending-count" class="tab-badge">0</span>
+          </button>
+          <button class="parent-tab-btn" data-tab="bank">
+            <span>🪙</span>
+            <span>Bank & Cash Out</span>
+          </button>
+          <button class="parent-tab-btn" data-tab="statement">
+            <span>🏛️</span>
+            <span>Bank Statement</span>
+          </button>
+          <button class="parent-tab-btn" data-tab="debug">
+            <span>🔧</span>
+            <span>Debugger</span>
+          </button>
+          <button class="parent-tab-btn" data-tab="sync">
+            <span>📲</span>
+            <span>Phone Migration</span>
+          </button>
+          <button class="parent-tab-btn" data-tab="tokens">
+            <span>🏷️</span>
+            <span>Printable Chores</span>
+          </button>
+          <button class="parent-tab-btn" data-tab="settings">
+            <span>⚙️</span>
+            <span>Settings & PIN</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 1: PENDING APPROVALS PANE -->
+      <div id="tab-pending" class="parent-tab-pane space-y-4">
+        <div class="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+          <div>
+            <h3 class="font-extrabold text-slate-800 text-lg">Pending Chore Approvals</h3>
+            <p class="text-xs text-slate-500">Review earned stars and approve them to move into the child's Bank.</p>
+          </div>
+          <button id="btn-approve-all-pending" class="hidden px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow transition">
+            ✓ Approve All Pending
+          </button>
+        </div>
+
+        <div id="parent-pending-items-container" class="space-y-3">
+          <!-- Filled dynamically by JS -->
+        </div>
+      </div>
+
+      <!-- TAB 2: BANK & REWARDS CATALOG PANE -->
+      <div id="tab-bank" class="parent-tab-pane hidden space-y-6">
+        
+        <!-- Bank Balance Summary Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-amber-200 shadow-sm flex items-center gap-3">
+            <span class="text-3xl">🥇</span>
+            <div>
+              <div class="text-xs font-bold text-slate-500 uppercase">Gold Stars</div>
+              <div id="parent-bank-gold" class="text-2xl font-black text-amber-600">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+            <span class="text-3xl">🥈</span>
+            <div>
+              <div class="text-xs font-bold text-slate-500 uppercase">Silver Stars</div>
+              <div id="parent-bank-silver" class="text-2xl font-black text-slate-600">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-orange-200 shadow-sm flex items-center gap-3">
+            <span class="text-3xl">🥉</span>
+            <div>
+              <div class="text-xs font-bold text-slate-500 uppercase">Bronze Stars</div>
+              <div id="parent-bank-bronze" class="text-2xl font-black text-orange-600">0</div>
+            </div>
+          </div>
+          <div class="bg-gradient-to-tr from-indigo-500 to-purple-600 text-white p-4 rounded-2xl shadow-sm flex items-center gap-3">
+            <span class="text-3xl">✨</span>
+            <div>
+              <div class="text-xs font-bold text-indigo-100 uppercase">Total Points</div>
+              <div id="parent-bank-points" class="text-2xl font-black">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STARTING & CURRENT STAR BALANCES MANAGER -->
+        <div class="bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                <span>⚖️</span> Set Starting or Current Star Balances
+              </h3>
+              <p class="text-xs text-slate-500">Need to start with specific Silver and Bronze stars? Adjust child's bank counts directly.</p>
+            </div>
+          </div>
+
+          <form id="form-starting-balances" class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+            <div>
+              <label class="block text-xs font-bold text-amber-700 uppercase mb-1">🥇 Gold Stars</label>
+              <input type="number" id="input-balance-gold" min="0" max="999" class="w-full px-3 py-2 rounded-xl border border-amber-200 font-black text-center text-lg bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500" value="0">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">🥈 Silver Stars</label>
+              <input type="number" id="input-balance-silver" min="0" max="999" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-black text-center text-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500" value="0">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-orange-700 uppercase mb-1">🥉 Bronze Stars</label>
+              <input type="number" id="input-balance-bronze" min="0" max="999" class="w-full px-3 py-2 rounded-xl border border-orange-200 font-black text-center text-lg bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500" value="0">
+            </div>
+
+            <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm shadow transition">
+              💾 Save Star Balances
+            </button>
+          </form>
+        </div>
+
+        <!-- Cash Out Reward Catalog -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-extrabold text-slate-800">Cash Out Real-Life Rewards</h3>
+              <p class="text-xs text-slate-500">Deduct stars when your child redeems them for real treats & screen time.</p>
+            </div>
+            <button id="btn-custom-cashout-open" onclick="window.starbookApp?.openModal('modal-custom-cashout')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-200">
+              + Custom Reward
+            </button>
+          </div>
+
+          <div id="rewards-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 3: BANK STATEMENT & TRANSACTION LEDGER PANE -->
+      <div id="tab-statement" class="parent-tab-pane hidden space-y-6">
+        
+        <!-- Official Bank Account Statement Header -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-700/60 relative overflow-hidden">
+          <div class="absolute right-4 -bottom-6 text-9xl opacity-5 pointer-events-none select-none">🏛️</div>
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  ● FDIC-Style Parent Insured
+                </span>
+                <span id="statement-account-number" class="text-xs font-mono text-slate-400">ACCT-7734-ALEX</span>
+              </div>
+              <h3 id="statement-child-name" class="text-2xl font-black text-white mt-1 font-kid">Alex's Star Savings Bank</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Official Double-Entry Transaction Ledger & Audit Trail</p>
+            </div>
+
+            <!-- Print Statement Button -->
+            <button id="btn-print-statement" class="self-start sm:self-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition">
+              <span>🖨️</span> Print Statement
+            </button>
+          </div>
+
+          <!-- Account Ledger Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+            <div>
+              <div class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Available Balance</div>
+              <div id="statement-balance-badge" class="text-lg font-black text-amber-300 mt-0.5">0 Gold • 0 Silver • 0 Bronze (0 pts)</div>
+            </div>
+            <div>
+              <div class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Lifetime Deposits (Earned)</div>
+              <div id="statement-total-earned" class="text-lg font-black text-emerald-400 mt-0.5">+0 pts</div>
+            </div>
+            <div>
+              <div class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Lifetime Withdrawals (Debits)</div>
+              <div id="statement-total-spent" class="text-lg font-black text-rose-400 mt-0.5">-0 pts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <!-- Filter Buttons -->
+          <div class="flex items-center gap-1.5 overflow-x-auto">
+            <button class="statement-filter-btn active" data-filter="all">All Transactions</button>
+            <button class="statement-filter-btn" data-filter="credits">Deposits (+)</button>
+            <button class="statement-filter-btn" data-filter="debits">Withdrawals (-)</button>
+            <button class="statement-filter-btn" data-filter="transfers">Upgrades (⇄)</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative min-w-[220px]">
+            <input type="text" id="input-statement-search" placeholder="Search chore, reward, barcode..." class="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <span class="absolute left-2.5 top-2 text-xs text-slate-400">🔍</span>
+          </div>
+        </div>
+
+        <!-- Transactions Table Card -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-black uppercase text-slate-500 tracking-wider">
+                  <th class="px-4 py-3">Date / TX ID</th>
+                  <th class="px-4 py-3">Transaction & Barcode</th>
+                  <th class="px-4 py-3">Type</th>
+                  <th class="px-4 py-3 text-right">Stars & Points</th>
+                  <th class="px-4 py-3 text-right">Running Balance</th>
+                </tr>
+              </thead>
+              <tbody id="ledger-transactions-table-body" class="divide-y divide-slate-100">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div id="ledger-empty-state" class="hidden p-8 text-center">
+            <span class="text-4xl">📄</span>
+            <p class="font-bold text-slate-700 text-sm mt-2">No transactions match your search filter</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 4: PARENT DEBUGGER & SYSTEM HEALTH PANE -->
+      <div id="tab-debug" class="parent-tab-pane hidden space-y-6">
+        
+        <!-- System Health Overview -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+          <h3 class="text-lg font-extrabold text-slate-800 mb-2 flex items-center gap-2">
+            <span>🔧</span> System Health & Storage Inspector
+          </h3>
+          <p class="text-xs text-slate-500 mb-4">Real-time diagnostics, ledger integrity verification, and browser storage status.</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <span class="text-xs font-bold text-slate-500 uppercase block mb-1">Ledger Integrity Status</span>
+              <div id="debug-health-status" class="mt-1">
+                <!-- Reconciled badge or warning -->
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <span class="text-xs font-bold text-slate-500 uppercase block mb-1">Browser Storage (localStorage)</span>
+              <p id="debug-storage-status" class="text-xs font-mono font-semibold text-slate-700 mt-1">
+                Key: "starbook_kids_data_v1"
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2">
+            <button id="btn-debug-reconcile" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs shadow transition">
+              🔄 Force Recalculate & Reconcile Balances
+            </button>
+            <span class="text-xs text-slate-400">Replays all ledger transactions from beginning to present</span>
+          </div>
+        </div>
+
+        <!-- Barcode Scanner Debugger & Direct Injector -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+          <h3 class="text-lg font-extrabold text-slate-800 mb-2 flex items-center gap-2">
+            <span>🏷️</span> Barcode Scanner Debugger & Injector
+          </h3>
+          <p class="text-xs text-slate-500 mb-4">Simulate how any barcode resolves and inject synthetic events into the queue or bank.</p>
+
+          <form id="form-debug-inject-barcode" class="space-y-4 max-w-xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Select Preset or Custom Code</label>
+                <input type="text" id="debug-inject-code" placeholder="e.g. BRONZE-TEETH-01, GOLD-ROOM-01" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-mono text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500" value="GOLD-ROOM-01" required>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Target Destination</label>
+                <select id="debug-inject-mode" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-indigo-500">
+                  <option value="pending">Inject into Pending Approval Box</option>
+                  <option value="deposit">Direct Instant Deposit to Bank</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="submit" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition">
+                ⚡ Inject Barcode Transaction
+              </button>
+              <button type="button" onclick="document.getElementById('debug-inject-code').value='BRONZE-TEETH-01'" class="text-xs text-indigo-600 font-bold hover:underline">
+                Try Bronze
+              </button>
+              <button type="button" onclick="document.getElementById('debug-inject-code').value='SILVER-HW-01'" class="text-xs text-indigo-600 font-bold hover:underline">
+                Try Silver
+              </button>
+              <button type="button" onclick="document.getElementById('debug-inject-code').value='GOLD-HELP-02'" class="text-xs text-indigo-600 font-bold hover:underline">
+                Try Gold
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Raw JSON Storage Editor -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-lg font-extrabold text-slate-800">Raw JSON State Editor</h3>
+              <p class="text-xs text-slate-500">View or manually patch your localStorage data JSON.</p>
+            </div>
+            <button id="btn-debug-apply-raw-json" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow transition">
+              💾 Save & Apply JSON
+            </button>
+          </div>
+
+          <textarea id="textarea-debug-raw-json" rows="12" class="w-full p-4 rounded-2xl bg-slate-900 text-emerald-400 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500" spellcheck="false"></textarea>
+        </div>
+
+      </div>
+
+      <!-- TAB 5: PHONE-TO-PHONE MIGRATION & BACKUP PANE -->
+      <div id="tab-sync" class="parent-tab-pane hidden space-y-6">
+        
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-3xl p-6 shadow-md">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-4xl">📲</span>
+            <div>
+              <h3 class="text-xl font-black font-kid">Phone-to-Phone Migration & Backup</h3>
+              <p class="text-indigo-100 text-xs">Seamlessly move your child's stars, ledger, and bank balance to another phone or tablet!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Method 1: Export / Download JSON Backup -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-xs font-black uppercase text-indigo-600 mb-1">
+                <span>Method 1</span> • Universal File Backup
+              </div>
+              <h4 class="text-lg font-black text-slate-800 font-kid">Export & Import JSON File</h4>
+              <p class="text-xs text-slate-500 mt-1 mb-4">
+                Download a complete, offline `.json` backup file containing all balances, transactions, and settings. Send it via AirDrop, email, or messaging to your other device.
+              </p>
+            </div>
+
+            <div class="space-y-3 pt-2 border-t border-slate-100">
+              <button id="btn-export-backup-json" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition flex items-center justify-center gap-2">
+                <span>📥</span> Download Backup File (.json)
+              </button>
+
+              <button id="btn-import-backup-file" class="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 transition flex items-center justify-center gap-2">
+                <span>📤</span> Restore / Import from File
+              </button>
+              <input type="file" id="input-import-backup-file" accept=".json,application/json" class="hidden">
+            </div>
+          </div>
+
+          <!-- Method 2: Copy & Paste Sync Code -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-xs font-black uppercase text-purple-600 mb-1">
+                <span>Method 2</span> • Copyable Sync Code
+              </div>
+              <h4 class="text-lg font-black text-slate-800 font-kid">Instant Sync Code</h4>
+              <p class="text-xs text-slate-500 mt-1 mb-4">
+                Copy this encoded sync token and paste it directly on your new device to restore everything immediately.
+              </p>
+
+              <div class="mb-3">
+                <textarea id="display-sync-code-text" rows="3" readonly class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-mono text-[10px] break-all select-all"></textarea>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <button id="btn-copy-sync-code" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow transition">
+                📋 Copy Sync Code to Clipboard
+              </button>
+
+              <!-- Paste and Restore Form -->
+              <form id="form-apply-sync-code" class="flex gap-2">
+                <input type="text" id="input-apply-sync-code" placeholder="Paste STARBOOK-SYNC:... code here" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono">
+                <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow transition">
+                  Restore
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TAB 4: PRINTABLE CHORE TOKENS PANE -->
+      <div id="tab-tokens" class="parent-tab-pane hidden space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm print:hidden">
+          <div>
+            <h3 class="text-lg font-extrabold text-slate-800">Printable Chore Barcode Tokens</h3>
+            <p class="text-xs text-slate-500">Print these tokens or scan them directly from your phone/tablet screen!</p>
+          </div>
+          <button id="btn-print-chore-cards" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition">
+            <span>🖨️</span>
+            <span>Print Chore Cards</span>
+          </button>
+        </div>
+
+        <!-- Printable Cards Grid -->
+        <div id="chore-cards-printable-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <!-- Dynamically populated with real SVG barcodes -->
+        </div>
+      </div>
+
+      <!-- TAB 5: PARENT SETTINGS PANE -->
+      <div id="tab-settings" class="parent-tab-pane hidden space-y-6">
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 max-w-2xl">
+          <h3 class="text-lg font-extrabold text-slate-800 mb-4">Parent Settings & PIN Code</h3>
+          
+          <form id="parent-settings-form" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Child's Name</label>
+              <input type="text" id="setting-child-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500" value="Alex">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Parent 4-Digit PIN</label>
+              <input type="password" id="setting-parent-pin" maxlength="4" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-mono tracking-widest text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" value="1234">
+              <span class="text-xs text-slate-400 mt-1 block">Default PIN is 1234. Change it to keep little hands out!</span>
+            </div>
+
+            <div class="pt-2">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" id="setting-pin-toggle" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" checked>
+                <span class="text-sm font-bold text-slate-700">Require PIN to enter Parent Dashboard</span>
+              </label>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow transition">
+                Save Settings
+              </button>
+              
+              <button type="button" id="btn-reset-demo-data" class="px-4 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs transition">
+                🔄 Load Demo Data
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ========================================== -->
+  <!-- MODALS & OVERLAYS                          -->
+  <!-- ========================================== -->
+
+  <!-- 1. SCANNER MODAL (Webcam + Simulation) -->
+  <div id="modal-scan" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border-4 border-amber-300 animate-pop-in">
+      
+      <!-- Scanner Header -->
+      <div class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📷</span>
+          <h3 class="font-bold text-lg font-kid">Point Camera at Barcode</h3>
+        </div>
+        <button data-close-modal="modal-scan" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Viewfinder Container -->
+      <div class="relative bg-black w-full aspect-[4/3] flex items-center justify-center overflow-hidden">
+        <!-- Live Video Element -->
+        <video id="webcam-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        
+        <!-- Target Reticle & Laser Scan Line -->
+        <div class="scanner-viewfinder-reticle">
+          <div class="reticle-corner tl"></div>
+          <div class="reticle-corner tr"></div>
+          <div class="reticle-corner bl"></div>
+          <div class="reticle-corner br"></div>
+          <div class="laser-scanner-line"></div>
+        </div>
+
+        <!-- Overlay Camera Controls (Torch & Flip) -->
+        <div class="absolute top-3 right-3 flex items-center gap-2">
+          <button id="btn-scanner-torch" class="hidden p-2.5 rounded-full bg-black/60 hover:bg-black/80 text-amber-300 backdrop-blur text-sm" title="Toggle Flashlight">
+            🔦
+          </button>
+          <button id="btn-scanner-flip" class="p-2.5 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur text-sm" title="Flip Camera">
+            🔄
+          </button>
+        </div>
+
+        <!-- Camera Status Message -->
+        <div id="camera-status-msg" class="absolute bottom-3 inset-x-3 text-center text-xs font-semibold text-white/90 bg-black/60 backdrop-blur px-3 py-1.5 rounded-full">
+          Starting camera...
+        </div>
+      </div>
+
+      <!-- Scanner Drawer: Manual Code Input & Quick Barcodes -->
+      <div class="p-5 bg-slate-50 border-t border-slate-200">
+        <div class="text-xs font-bold text-slate-500 mb-2 uppercase flex items-center justify-between">
+          <span>Or Type / Paste Barcode</span>
+          <span class="text-indigo-600 cursor-pointer" onclick="document.getElementById('input-manual-code').value='CHORE-ROOM-01'">Example: Room</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="input-manual-code" placeholder="Enter barcode (e.g. 12345678)" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-amber-400">
+          <button id="btn-submit-manual-code" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-sm shadow">
+            Scan!
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 2. REASON MODAL (Select or Enter Chore Reason) -->
+  <div id="modal-reason" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border-4 border-amber-300 p-6 animate-pop-in">
+      
+      <!-- Scanned Item Badge Banner -->
+      <div class="bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-2xl p-4 flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <span id="reason-scanned-item-icon" class="text-3xl">🏷️</span>
+          <div>
+            <div class="text-xs font-extrabold text-amber-800 uppercase tracking-wide">Barcode Scanned!</div>
+            <h3 id="reason-scanned-item-name" class="font-black text-slate-900 text-base">Cereal Box</h3>
+            <span id="reason-scanned-item-code" class="text-[11px] font-mono text-slate-500">CODE: 12345</span>
+          </div>
+        </div>
+        <button data-close-modal="modal-reason" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <h2 class="text-xl md:text-2xl font-black text-slate-800 font-kid mb-1">
+        What awesome thing did you do? ⭐
+      </h2>
+      <p class="text-xs font-semibold text-slate-500 mb-4">Select a chore below or type your own deed!</p>
+
+      <!-- Preset Chore Buttons Grouped by Star Tier -->
+      <div class="space-y-3 mb-4">
+        
+        <!-- Bronze Chores Group -->
+        <div>
+          <div class="flex items-center gap-1.5 text-xs font-black text-orange-700 uppercase tracking-wider mb-1.5">
+            <span>🥉</span> Bronze Chores (Quick Habits • 1 pt)
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="btn-chore-preset" data-reason="Brushed Teeth 2 Mins" data-icon="🪥" data-tier="bronze">
+              <span class="text-2xl">🪥</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Brushed Teeth</span>
+                <span class="text-[10px] font-extrabold text-orange-600">🥉 Bronze Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Made My Bed" data-icon="🛏️" data-tier="bronze">
+              <span class="text-2xl">🛏️</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Made Bed</span>
+                <span class="text-[10px] font-extrabold text-orange-600">🥉 Bronze Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Put Away All Toys" data-icon="🧸" data-tier="bronze">
+              <span class="text-2xl">🧸</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Put Toys Away</span>
+                <span class="text-[10px] font-extrabold text-orange-600">🥉 Bronze Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Put Shoes by Door" data-icon="👟" data-tier="bronze">
+              <span class="text-2xl">👟</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Shoes Put Away</span>
+                <span class="text-[10px] font-extrabold text-orange-600">🥉 Bronze Star</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Silver Chores Group -->
+        <div>
+          <div class="flex items-center gap-1.5 text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+            <span>🥈</span> Silver Chores (Daily Milestones • 2 pts)
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="btn-chore-preset" data-reason="Finished Homework" data-icon="📚" data-tier="silver">
+              <span class="text-2xl">📚</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Finished Homework</span>
+                <span class="text-[10px] font-extrabold text-slate-600">🥈 Silver Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Read for 20 Minutes" data-icon="📖" data-tier="silver">
+              <span class="text-2xl">📖</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Read 20 Mins</span>
+                <span class="text-[10px] font-extrabold text-slate-600">🥈 Silver Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Ate All My Veggies" data-icon="🥦" data-tier="silver">
+              <span class="text-2xl">🥦</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Ate All Veggies</span>
+                <span class="text-[10px] font-extrabold text-slate-600">🥈 Silver Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Fed / Walked Pet" data-icon="🐕" data-tier="silver">
+              <span class="text-2xl">🐕</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Helped With Pet</span>
+                <span class="text-[10px] font-extrabold text-slate-600">🥈 Silver Star</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Gold Chores Group -->
+        <div>
+          <div class="flex items-center gap-1.5 text-xs font-black text-amber-700 uppercase tracking-wider mb-1.5">
+            <span>🥇</span> Gold Chores (Super Star Milestones • 4 pts)
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="btn-chore-preset" data-reason="Cleaned My Bedroom" data-icon="🧹" data-tier="gold">
+              <span class="text-2xl">🧹</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Cleaned Room</span>
+                <span class="text-[10px] font-extrabold text-amber-600">🥇 Gold Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Helped Family Member" data-icon="🤝" data-tier="gold">
+              <span class="text-2xl">🤝</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Kind Helper</span>
+                <span class="text-[10px] font-extrabold text-amber-600">🥇 Gold Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Washed / Loaded Dishes" data-icon="🧽" data-tier="gold">
+              <span class="text-2xl">🧽</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Kitchen Dishes</span>
+                <span class="text-[10px] font-extrabold text-amber-600">🥇 Gold Star</span>
+              </div>
+            </button>
+            <button class="btn-chore-preset" data-reason="Folded & Put Laundry Away" data-icon="🧺" data-tier="gold">
+              <span class="text-2xl">🧺</span>
+              <div class="text-left">
+                <span class="font-bold text-xs text-slate-800 block">Fold Laundry</span>
+                <span class="text-[10px] font-extrabold text-amber-600">🥇 Gold Star</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Custom Reason Input -->
+      <div class="mb-5">
+        <label class="block text-xs font-bold text-slate-600 mb-1">Or write your own deed:</label>
+        <input type="text" id="input-custom-reason" placeholder="e.g. Practiced piano, made breakfast..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+      </div>
+
+      <!-- Action Button -->
+      <button id="btn-confirm-reason-next" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 hover:from-amber-500 hover:to-rose-500 text-white font-black text-base shadow-lg shadow-amber-300/50 transition transform active:scale-95 font-kid">
+        Next: Get My Star! 🌟
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- 3. STAR AWARDING SELECTOR / SPINNER MODAL -->
+  <div id="modal-star-award" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border-4 border-amber-300 p-6 text-center animate-pop-in">
+      
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs uppercase font-extrabold text-amber-600 tracking-wider">Step 3 of 3</span>
+        <button data-close-modal="modal-star-award" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <h2 class="text-2xl font-black text-slate-800 font-kid">
+        Claim Your Star! ⭐
+      </h2>
+      <p id="award-chore-label" class="text-sm font-bold text-indigo-600 mt-1 mb-5">
+        🧹 Cleaned Bedroom
+      </p>
+
+      <!-- Spinner Wheel Section -->
+      <div class="relative w-48 h-48 mx-auto my-3 flex items-center justify-center">
+        <!-- Pointer arrow -->
+        <div class="spinner-pointer">▼</div>
+        <!-- Rotating wheel graphic -->
+        <div id="star-spinner-wheel" class="spinner-wheel-disc">
+          <div class="wheel-seg seg-gold"><span>🥇 Gold</span></div>
+          <div class="wheel-seg seg-silver"><span>🥈 Silver</span></div>
+          <div class="wheel-seg seg-bronze"><span>🥉 Bronze</span></div>
+        </div>
+        <div class="wheel-center-pin">⭐</div>
+      </div>
+
+      <!-- Result badge (reveals on finish) -->
+      <div id="spinner-result-display" class="hidden my-3">
+        <!-- Filled by JS -->
+      </div>
+
+      <!-- Big Spin Button -->
+      <button id="btn-spin-wheel" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-black text-lg shadow-lg shadow-amber-300/50 transition transform active:scale-95 font-kid mb-4">
+        🎰 Spin the Star Wheel!
+      </button>
+
+      <!-- Or Select by Difficulty Divider -->
+      <div class="relative my-4">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+        <div class="relative flex justify-center text-xs uppercase font-bold text-slate-400"><span class="bg-white px-2">or pick by chore size</span></div>
+      </div>
+
+      <!-- 3 Difficulty Tier Buttons -->
+      <div class="grid grid-cols-3 gap-2">
+        <button class="btn-difficulty-tier diff-bronze" data-tier="bronze">
+          <span class="text-2xl">🥉</span>
+          <span class="text-xs font-black">Bronze</span>
+          <span class="text-[10px] text-slate-500">Quick Chore</span>
+        </button>
+
+        <button class="btn-difficulty-tier diff-silver" data-tier="silver">
+          <span class="text-2xl">🥈</span>
+          <span class="text-xs font-black">Silver</span>
+          <span class="text-[10px] text-slate-500">Great Job</span>
+        </button>
+
+        <button class="btn-difficulty-tier diff-gold" data-tier="gold">
+          <span class="text-2xl">🥇</span>
+          <span class="text-xs font-black">Gold</span>
+          <span class="text-[10px] text-slate-500">Super Star!</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 4. CELEBRATION MODAL -->
+  <div id="modal-celebration" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/85 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border-4 border-amber-400 p-8 text-center animate-pop-in relative">
+      
+      <div class="text-xs font-black text-amber-500 uppercase tracking-widest mb-2">⭐ AWESOME JOB! ⭐</div>
+
+      <div id="celebration-star-badge" class="my-4">
+        <!-- Giant Animated Star Injected -->
+      </div>
+
+      <h3 class="text-2xl md:text-3xl font-black text-slate-800 font-kid mb-2">
+        Star Request Sent! 🎉
+      </h3>
+
+      <div id="celebration-deed-text" class="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-slate-700 text-sm mb-6">
+        <!-- Reason text -->
+      </div>
+
+      <button data-close-modal="modal-celebration" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-black text-base shadow-lg shadow-indigo-300 font-kid transition transform active:scale-95">
+        Woohoo! Got It! 👍
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- 5. PARENT PIN GATE MODAL -->
+  <div id="modal-parent-pin" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl border-2 border-slate-300 p-6 text-center animate-pop-in">
+      
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Parents Only</span>
+        <button data-close-modal="modal-parent-pin" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mx-auto mb-3 text-2xl shadow">
+        🔒
+      </div>
+
+      <h3 class="text-xl font-extrabold text-slate-800 font-kid mb-1">
+        Enter Parent PIN
+      </h3>
+      <p class="text-xs text-slate-500 mb-6">Default PIN is 1234 (changeable in settings)</p>
+
+      <!-- 4 PIN Dots -->
+      <div class="pin-dots-container flex justify-center gap-3 mb-6">
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+      </div>
+
+      <!-- Numeric Keypad -->
+      <div class="grid grid-cols-3 gap-3 max-w-xs mx-auto mb-4">
+        <button class="pin-key" data-key="1">1</button>
+        <button class="pin-key" data-key="2">2</button>
+        <button class="pin-key" data-key="3">3</button>
+        <button class="pin-key" data-key="4">4</button>
+        <button class="pin-key" data-key="5">5</button>
+        <button class="pin-key" data-key="6">6</button>
+        <button class="pin-key" data-key="7">7</button>
+        <button class="pin-key" data-key="8">8</button>
+        <button class="pin-key" data-key="9">9</button>
+        <button class="pin-key action" data-key="clear">C</button>
+        <button class="pin-key" data-key="0">0</button>
+        <button class="pin-key action" data-key="back">⌫</button>
+      </div>
+
+      <!-- Forgot PIN Math Challenge -->
+      <button id="btn-parent-math-bypass" class="text-xs font-bold text-indigo-600 hover:underline">
+        Forgot PIN? Solve Adult Math Challenge
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- 6. CUSTOM CASH OUT MODAL -->
+  <div id="modal-custom-cashout" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border-2 border-slate-300 p-6 animate-pop-in">
+      
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-black text-lg text-slate-800 flex items-center gap-2">
+          <span>🪙</span> Custom Cash Out / Redeem
+        </h3>
+        <button data-close-modal="modal-custom-cashout" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <form id="form-custom-cashout" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Reward Redeemed</label>
+          <input type="text" id="custom-reward-name" placeholder="e.g. 1 Hour Trampoline Park, Lego Set" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-2 uppercase">Stars to Deduct From Bank</label>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <span class="text-xs font-bold text-amber-600 block mb-1">🥇 Gold</span>
+              <input type="number" id="custom-cost-gold" min="0" value="1" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-bold text-center">
+            </div>
+            <div>
+              <span class="text-xs font-bold text-slate-600 block mb-1">🥈 Silver</span>
+              <input type="number" id="custom-cost-silver" min="0" value="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-bold text-center">
+            </div>
+            <div>
+              <span class="text-xs font-bold text-orange-600 block mb-1">🥉 Bronze</span>
+              <input type="number" id="custom-cost-bronze" min="0" value="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-bold text-center">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Note / Details (Optional)</label>
+          <input type="text" id="custom-reward-note" placeholder="e.g. Special treat for Friday afternoon" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-black text-sm shadow transition mt-2">
+          Confirm Cash Out & Deduct Stars
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- 7. MANUAL GIFT STAR MODAL -->
+  <div id="modal-manual-star" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl border-2 border-slate-300 p-6 animate-pop-in">
+      
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-black text-lg text-slate-800 flex items-center gap-2">
+          <span>🎁</span> Gift Surprise Star
+        </h3>
+        <button data-close-modal="modal-manual-star" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+      </div>
+
+      <form id="form-manual-star" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Star Tier</label>
+          <select id="manual-star-tier" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="gold">🥇 Gold Star (4 pts)</option>
+            <option value="silver">🥈 Silver Star (2 pts)</option>
+            <option value="bronze">🥉 Bronze Star (1 pt)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Count</label>
+          <input type="number" id="manual-star-count" min="1" max="10" value="1" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-bold text-center">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1 uppercase">Reason / Note</label>
+          <input type="text" id="manual-star-note" placeholder="e.g. Excellent sharing with sister" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow transition mt-2">
+          Add to Bank
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- 8. CHORE BARCODE BINDER MODAL (For Kids & Parents) -->
+  <div id="modal-barcode-binder" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl border-4 border-amber-300 flex flex-col animate-pop-in">
+      
+      <!-- Binder Header -->
+      <div class="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 text-white px-6 py-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📚</span>
+          <div>
+            <h3 class="font-black text-xl font-kid">Chore Barcode Binder</h3>
+            <p class="text-xs text-amber-100 font-medium">Scannable barcode cards for Bronze, Silver, & Gold chores!</p>
+          </div>
+        </div>
+        <button data-close-modal="modal-barcode-binder" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Binder Cards Container -->
+      <div class="p-5 overflow-y-auto flex-1 bg-slate-50">
+        <div id="barcode-binder-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Dynamically populated with SVG barcodes -->
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="p-4 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+        <span>Point camera at any barcode, or tap "Quick Tap Scan" to test!</span>
+        <button data-close-modal="modal-barcode-binder" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs">
+          Close Binder
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 9. KID'S OFFICIAL TRANSACTION RECEIPT MODAL -->
+  <div id="modal-kid-receipt" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/85 backdrop-blur-md p-4">
+    <div class="bg-gradient-to-b from-amber-50 to-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border-4 border-amber-400 p-6 sm:p-7 relative animate-pop-in">
+      
+      <!-- Close Button -->
+      <button data-close-modal="modal-kid-receipt" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-black text-lg flex items-center justify-center transition">
+        ✕
+      </button>
+
+      <!-- Certificate Header Banner -->
+      <div class="text-center pb-4 border-b-2 border-dashed border-amber-200">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-200 text-amber-900 text-xs font-black tracking-wider uppercase mb-2 anim-pulse-glow">
+          🌟 OFFICIAL STAR RECORD 🌟
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-800 font-kid">
+          Star Bank Passbook Receipt
+        </h3>
+        <p class="text-xs text-slate-500 font-medium" id="kid-receipt-acct-num">
+          Account: ACCT-7734-ALEX
+        </p>
+      </div>
+
+      <!-- Receipt Content -->
+      <div class="py-4 text-center space-y-3.5">
+        <!-- Giant Animated Icon -->
+        <div id="kid-receipt-icon-container" class="w-20 h-20 mx-auto rounded-3xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-5xl shadow-inner anim-bounce-gentle">
+          ⭐
+        </div>
+
+        <div>
+          <div id="kid-receipt-badge" class="inline-block mb-1">
+            <!-- Injected by JS -->
+          </div>
+          <h4 id="kid-receipt-title" class="text-xl font-black text-slate-800 font-kid">
+            Cleaned Entire Bedroom
+          </h4>
+          <p id="kid-receipt-barcode" class="text-xs font-mono text-slate-500 mt-0.5">
+            Barcode: GOLD-ROOM-01
+          </p>
+        </div>
+
+        <!-- Receipt Details Box -->
+        <div class="bg-white/90 rounded-2xl p-4 border border-amber-200/80 text-left space-y-2 text-xs shadow-sm">
+          <div class="flex justify-between items-center py-1 border-b border-slate-100">
+            <span class="text-slate-500 font-bold">Transaction ID</span>
+            <span id="kid-receipt-tx-id" class="font-mono font-bold text-slate-700">TX-104928</span>
+          </div>
+          <div class="flex justify-between items-center py-1 border-b border-slate-100">
+            <span class="text-slate-500 font-bold">Date & Time</span>
+            <span id="kid-receipt-time" class="font-bold text-slate-700">Today at 3:45 PM</span>
+          </div>
+          <div class="flex justify-between items-center py-1 border-b border-slate-100">
+            <span class="text-slate-500 font-bold">Stars Earned / Spent</span>
+            <span id="kid-receipt-delta" class="font-extrabold text-emerald-600 text-sm">+1 🥇 (+4 pts)</span>
+          </div>
+          <div class="flex justify-between items-center py-1">
+            <span class="text-slate-500 font-bold">Bank Balance After</span>
+            <span id="kid-receipt-balance" class="font-extrabold text-amber-700">2🥇 4🥈 6🥉 (22 pts)</span>
+          </div>
+        </div>
+
+        <!-- Official Stamp -->
+        <div class="pt-1">
+          <div id="kid-receipt-stamp" class="kid-rubber-stamp approved">
+            ✓ APPROVED & RECORDED
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button data-close-modal="modal-kid-receipt" class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-black text-sm shadow-md font-kid transition transform active:scale-95">
+        ✨ Close & Back to Bank Book
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/barcode-gen.js"></script>
+  <script src="js/scanner.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
+

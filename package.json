@@ -1,0 +1,30 @@
+{
+  "name": "starbook-kids",
+  "version": "1.0.0",
+  "description": "Kid-friendly Gold Star Barcode Scanner & Reward System",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && rm -rf docs && cp -r dist docs",
+    "preview": "vite preview",
+    "start": "node server.js",
+    "test": "node test/react-app.test.js"
+  },
+  "keywords": [
+    "reward-system",
+    "barcode-scanner",
+    "kids",
+    "gold-stars",
+    "gamification"
+  ],
+  "author": "Google DeepMind",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.5"
+  }
+}

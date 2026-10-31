@@ -1,0 +1,1562 @@
+/* Starbook Kids - Stylesheet */
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6), 0 10px 25px -5px rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 16px rgba(245, 158, 11, 0), 0 20px 35px -5px rgba(245, 158, 11, 0.6);
+  }
+}
+
+@keyframes laserScan {
+  0% { top: 10%; opacity: 0.8; }
+  50% { top: 90%; opacity: 1; }
+  100% { top: 10%; opacity: 0.8; }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* --- Kid Delight & Passbook Animations --- */
+@keyframes passbookSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+  70% {
+    transform: translateY(-4px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes stampSlam {
+  0% {
+    opacity: 0;
+    transform: scale(2.8) rotate(-15deg);
+  }
+  60% {
+    opacity: 0.95;
+    transform: scale(0.92) rotate(-5deg);
+  }
+  80% {
+    transform: scale(1.06) rotate(-7deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-6deg);
+  }
+}
+
+@keyframes floatStar1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(18deg) scale(1.12);
+  }
+}
+
+@keyframes floatStar2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-22px) rotate(-15deg) scale(1.18);
+  }
+}
+
+@keyframes floatStar3 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, -14px) rotate(25deg);
+  }
+}
+
+@keyframes ripplePulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.22);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@keyframes cameraRock {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-10deg) scale(1.08);
+  }
+  75% {
+    transform: rotate(10deg) scale(1.08);
+  }
+}
+
+@keyframes barcodeSweep {
+  0% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.9));
+  }
+  100% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+  }
+}
+
+@keyframes readyPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6), 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0), 0 8px 20px rgba(16, 185, 129, 0.5);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes starWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-12deg); }
+  75% { transform: rotate(12deg); }
+}
+
+@keyframes arrowShift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+@keyframes squishBounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.9, 1.1); }
+  60% { transform: scale(1.08, 0.92); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shineSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes auraPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.85));
+  }
+}
+
+.animate-pop-in {
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-bounce-gentle {
+  animation: floatGentle 2.5s ease-in-out infinite;
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.anim-pulse-glow {
+  animation: pulseGlow 2.5s infinite;
+}
+
+.anim-bounce-gentle {
+  animation: floatGentle 2.5s ease-in-out infinite;
+}
+
+.anim-wobble {
+  display: inline-block;
+  animation: starWobble 2.5s ease-in-out infinite;
+}
+
+.anim-camera-rock {
+  animation: cameraRock 3s ease-in-out infinite;
+}
+
+.anim-aura-pulse {
+  animation: auraPulse 2.8s ease-in-out infinite;
+}
+
+.anim-arrow-shift {
+  display: inline-block;
+  animation: arrowShift 1.5s ease-in-out infinite;
+}
+
+/* ========================================= */
+/* Big Scan Button UI                       */
+/* ========================================= */
+.scan-button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.big-scan-btn {
+  position: relative;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  border-radius: 9999px;
+  animation: pulseGlow 2.5s infinite;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.big-scan-btn:hover {
+  transform: scale(1.04);
+}
+
+.big-scan-btn:active {
+  transform: scale(0.97);
+}
+
+.scan-btn-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6, #3b82f6);
+  z-index: 0;
+  filter: blur(10px);
+  opacity: 0.7;
+}
+
+.scan-btn-inner {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+  border: 4px solid #fff;
+  border-radius: 9999px;
+  padding: 1.25rem 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: #fff;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 10px 20px rgba(217, 119, 6, 0.35);
+}
+
+.scan-btn-icon-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.barcode-overlay-icon {
+  font-family: monospace;
+  font-size: 0.65rem;
+  letter-spacing: -1px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: -4px;
+}
+
+.scan-btn-text {
+  text-align: left;
+}
+
+.scan-btn-title {
+  display: block;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(180, 83, 9, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.scan-btn-sub {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fffbeb;
+  text-shadow: 0 1px 2px rgba(180, 83, 9, 0.4);
+}
+
+@media (max-width: 640px) {
+  .scan-btn-inner {
+    padding: 1rem 1.75rem;
+    gap: 1rem;
+  }
+  .scan-btn-title {
+    font-size: 1.25rem;
+  }
+  .scan-btn-sub {
+    font-size: 0.75rem;
+  }
+}
+
+/* ========================================= */
+/* Bank Star Pills                           */
+/* ========================================= */
+.bank-star-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.bank-star-pill.gold {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border-color: #fde68a;
+}
+.bank-star-pill.silver {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-color: #cbd5e1;
+}
+.bank-star-pill.bronze {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-color: #fed7aa;
+}
+
+.star-pill-icon {
+  font-size: 2rem;
+}
+
+.star-pill-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.star-pill-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.star-pill-val {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #1e293b;
+}
+
+.star-pill-pts {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+/* ========================================= */
+/* Tier Starters (Bronze, Silver, Gold)      */
+/* ========================================= */
+.tier-starter-card {
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: #ffffff;
+  border: 2.5px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tier-starter-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.07);
+}
+
+.tier-starter-card.bronze {
+  border-color: #fed7aa;
+  background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+}
+
+.tier-starter-card.silver {
+  border-color: #cbd5e1;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.tier-starter-card.gold {
+  border-color: #fde68a;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.tier-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+.tier-badge-pill.bronze { background: #ffedd5; color: #c2410c; }
+.tier-badge-pill.silver { background: #f1f5f9; color: #475569; }
+.tier-badge-pill.gold { background: #fef3c7; color: #b45309; }
+
+.btn-start-tier-action {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-start-tier-action:hover {
+  transform: scale(1.02);
+}
+.btn-start-tier-action:active {
+  transform: scale(0.97);
+}
+.btn-start-tier-action.bronze {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+}
+.btn-start-tier-action.silver {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+.btn-start-tier-action.gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+.tier-quick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+.tier-quick-chip:hover {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  transform: translateY(-1px);
+}
+
+/* ========================================= */
+/* Star Exchange Station                     */
+/* ========================================= */
+.exchange-card {
+  display: flex;
+  flex-direction: column;
+  sm:flex-row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.exchange-card.ready {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb, #ffffff);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+.btn-exchange {
+  padding: 0.6rem 1.25rem;
+  border-radius: 1rem;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-exchange.ready {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.btn-exchange.ready:hover {
+  transform: scale(1.04);
+}
+
+.btn-exchange.disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* ========================================= */
+/* Bank Statement & Ledger Styles            */
+/* ========================================= */
+.statement-filter-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #64748b;
+  background: transparent;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.statement-filter-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.statement-filter-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.statement-row:hover {
+  background-color: #f8fafc;
+}
+
+.tx-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.tx-badge.credit { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.tx-badge.debit { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
+.tx-badge.transfer { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+.tx-badge.adjust { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+/* ========================================= */
+/* Chore Barcode Binder                      */
+/* ========================================= */
+.binder-card {
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.15s;
+}
+
+.binder-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.binder-card.tier-bronze { border-color: #fed7aa; }
+.binder-card.tier-silver { border-color: #cbd5e1; }
+.binder-card.tier-gold { border-color: #fde68a; }
+
+.binder-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.binder-barcode-svg {
+  margin: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.binder-card-footer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.btn-binder-scan-camera {
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.65rem;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.btn-binder-scan-camera:hover {
+  background: #334155;
+}
+
+.btn-binder-test-tap {
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.65rem;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.btn-binder-test-tap:hover {
+  background: #e2e8f0;
+}
+
+/* ========================================= */
+/* Viewfinder & Reticle                     */
+/* ========================================= */
+.scanner-viewfinder-reticle {
+  position: absolute;
+  width: 220px;
+  height: 160px;
+  pointer-events: none;
+}
+
+.reticle-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #f59e0b;
+  border-style: solid;
+}
+.reticle-corner.tl { top: 0; left: 0; border-width: 4px 0 0 4px; border-top-left-radius: 8px; }
+.reticle-corner.tr { top: 0; right: 0; border-width: 4px 4px 0 0; border-top-right-radius: 8px; }
+.reticle-corner.bl { bottom: 0; left: 0; border-width: 0 0 4px 4px; border-bottom-left-radius: 8px; }
+.reticle-corner.br { bottom: 0; right: 0; border-width: 0 4px 4px 0; border-bottom-right-radius: 8px; }
+
+.laser-scanner-line {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ef4444 20%, #ff0055 50%, #ef4444 80%, transparent);
+  box-shadow: 0 0 12px #ff0055, 0 0 20px #ef4444;
+  animation: laserScan 2s ease-in-out infinite;
+}
+
+/* ========================================= */
+/* Quick Simulation Cards                    */
+/* ========================================= */
+.quick-sim-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.quick-sim-card:hover {
+  transform: translateY(-3px);
+  border-color: #f59e0b;
+  box-shadow: 0 8px 16px rgba(245, 158, 11, 0.15);
+}
+
+.quick-sim-card:active {
+  transform: translateY(0);
+}
+
+/* ========================================= */
+/* Pending Stars (Kid Interface)             */
+/* ========================================= */
+.pending-star-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+}
+
+.pending-star-item.tier-gold { border-left: 5px solid #f59e0b; }
+.pending-star-item.tier-silver { border-left: 5px solid #94a3b8; }
+.pending-star-item.tier-bronze { border-left: 5px solid #ea580c; }
+
+.star-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pending-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: pulseGlow 1.5s infinite;
+}
+
+/* ========================================= */
+/* Preset Chore Buttons                      */
+/* ========================================= */
+.btn-chore-preset {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-chore-preset:hover {
+  border-color: #fbbf24;
+  background: #fffbeb;
+  transform: translateY(-2px);
+}
+
+.btn-chore-preset.selected {
+  border-color: #f59e0b;
+  background: #fef3c7;
+  box-shadow: 0 0 0 2px #f59e0b;
+}
+
+/* ========================================= */
+/* Star Spinner Wheel                        */
+/* ========================================= */
+.spinner-pointer {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  color: #ef4444;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.spinner-wheel-disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid #1e293b;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  background: conic-gradient(
+    #fbbf24 0deg 120deg,
+    #94a3b8 120deg 240deg,
+    #ea580c 240deg 360deg
+  );
+}
+
+.wheel-center-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 5;
+}
+
+.wheel-seg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  font-size: 0.85rem;
+}
+
+.wheel-seg.seg-gold { transform: rotate(60deg) translateY(-55px); }
+.wheel-seg.seg-silver { transform: rotate(180deg) translateY(-55px); }
+.wheel-seg.seg-bronze { transform: rotate(300deg) translateY(-55px); }
+
+/* Difficulty Tier Buttons */
+.btn-difficulty-tier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 1rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-difficulty-tier:hover {
+  transform: translateY(-2px);
+}
+
+.diff-bronze:hover, .diff-bronze.selected { border-color: #ea580c; background: #fff7ed; }
+.diff-silver:hover, .diff-silver.selected { border-color: #94a3b8; background: #f8fafc; }
+.diff-gold:hover, .diff-gold.selected { border-color: #f59e0b; background: #fffbeb; }
+
+/* ========================================= */
+/* PIN Keypad                                */
+/* ========================================= */
+.pin-dots-container .pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: transparent;
+  transition: all 0.15s ease;
+}
+
+.pin-dots-container .pin-dot.filled {
+  background: #1e293b;
+  border-color: #1e293b;
+  transform: scale(1.15);
+}
+
+.pin-key {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.pin-key:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.pin-key:active {
+  transform: scale(0.92);
+  background: #cbd5e1;
+}
+
+.pin-key.action {
+  font-size: 1.1rem;
+  color: #64748b;
+  background: #f1f5f9;
+}
+
+/* ========================================= */
+/* Parent Tabs & Dashboard Cards             */
+/* ========================================= */
+.parent-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.parent-tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.parent-tab-btn.active {
+  color: #0f172a;
+  background: #f59e0b;
+}
+
+.tab-badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  background: #ef4444;
+  color: #fff;
+}
+
+.parent-tab-btn.active .tab-badge {
+  background: #1e293b;
+  color: #fff;
+}
+
+/* Pending Card */
+.pending-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+@media (min-width: 640px) {
+  .pending-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.tier-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.tier-chip.gold { background: #fef3c7; color: #b45309; }
+.tier-chip.silver { background: #f1f5f9; color: #475569; }
+.tier-chip.bronze { background: #ffedd5; color: #c2410c; }
+
+.btn-action-approve {
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.75rem;
+  background: #10b981;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-action-approve:hover {
+  background: #059669;
+}
+
+.btn-action-reject {
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.75rem;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-action-reject:hover {
+  background: #fca5a5;
+}
+
+/* ========================================= */
+/* Rewards Catalog Cards                     */
+/* ========================================= */
+.reward-catalog-card {
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  transition: all 0.15s;
+}
+
+.reward-catalog-card.affordable {
+  border-color: #fde68a;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.reward-catalog-card.unaffordable {
+  opacity: 0.75;
+}
+
+.cost-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.cost-badge.gold { background: #fef3c7; color: #b45309; }
+.cost-badge.silver { background: #f1f5f9; color: #475569; }
+.cost-badge.bronze { background: #ffedd5; color: #c2410c; }
+
+/* History Log Item */
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+}
+
+/* ========================================= */
+/* Printable Chore Tokens                    */
+/* ========================================= */
+.printable-chore-token {
+  border: 2px dashed #94a3b8;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.token-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.token-icon {
+  font-size: 2rem;
+}
+
+.token-title {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.token-desc {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.token-tier-tag {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.token-barcode-box {
+  margin: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.token-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.5rem;
+}
+
+/* ========================================= */
+/* Toast Notifications                       */
+/* ========================================= */
+.app-toast {
+  padding: 0.85rem 1.25rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  animation: popIn 0.25s ease-out forwards;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.app-toast.toast-success { background: #10b981; }
+.app-toast.toast-info { background: #3b82f6; }
+.app-toast.toast-error { background: #ef4444; }
+
+.app-toast.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ========================================= */
+/* Kid's Star Transaction Book (Passbook)    */
+/* ========================================= */
+.kid-passbook-card {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #fffdfa 60%, #fffbeb 100%);
+  border: 4px solid #fde68a;
+  box-shadow: 0 16px 36px -8px rgba(217, 119, 6, 0.15), 0 0 0 1px rgba(245, 158, 11, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.kid-passbook-card:hover {
+  box-shadow: 0 20px 42px -8px rgba(217, 119, 6, 0.22), 0 0 0 1px rgba(245, 158, 11, 0.15);
+}
+
+.passbook-bg-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.anim-float-star {
+  position: absolute;
+  font-size: 2.5rem;
+  opacity: 0.18;
+}
+
+.anim-float-star.star-1 {
+  top: 8%;
+  left: 5%;
+  animation: floatStar1 5s ease-in-out infinite;
+}
+
+.anim-float-star.star-2 {
+  top: 60%;
+  right: 4%;
+  font-size: 3.5rem;
+  opacity: 0.12;
+  animation: floatStar2 6.5s ease-in-out infinite;
+}
+
+.anim-float-star.star-3 {
+  bottom: 8%;
+  left: 28%;
+  font-size: 2rem;
+  opacity: 0.15;
+  animation: floatStar3 4.5s ease-in-out infinite;
+}
+
+.anim-float-star.star-4 {
+  top: 15%;
+  right: 22%;
+  font-size: 2.2rem;
+  opacity: 0.14;
+  animation: floatStar1 7s ease-in-out infinite;
+}
+
+/* Custom Passbook Chunky Scrollbar */
+.kid-passbook-scrollable-container {
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b #fef3c7;
+  scroll-behavior: smooth;
+}
+
+.kid-passbook-scrollable-container::-webkit-scrollbar {
+  width: 9px;
+}
+
+.kid-passbook-scrollable-container::-webkit-scrollbar-track {
+  background: #fef3c7;
+  border-radius: 9999px;
+}
+
+.kid-passbook-scrollable-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+}
+
+.kid-passbook-scrollable-container::-webkit-scrollbar-thumb:hover {
+  background: #b45309;
+}
+
+/* Passbook Mini Stats */
+.passbook-mini-stat {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.passbook-mini-stat:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Passbook Filter Buttons */
+.kid-passbook-filter-btn {
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #78350f;
+  background: #fef3c7;
+  border: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.kid-passbook-filter-btn:hover {
+  background: #fde68a;
+  transform: translateY(-1.5px);
+}
+
+.kid-passbook-filter-btn:active {
+  transform: scale(0.94);
+}
+
+.kid-passbook-filter-btn.active {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  border-color: #f59e0b;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+  transform: scale(1.02);
+}
+
+/* Passbook Items */
+.kid-passbook-item {
+  position: relative;
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border: 2px solid #f1f5f9;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  animation: passbookSlideIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.kid-passbook-item:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.18);
+  border-color: #fcd34d;
+}
+
+.kid-passbook-item.passbook-type-credit {
+  border-left: 6px solid #10b981;
+}
+
+.kid-passbook-item.passbook-type-debit {
+  border-left: 6px solid #ec4899;
+}
+
+.kid-passbook-item.passbook-type-transfer {
+  border-left: 6px solid #8b5cf6;
+}
+
+.kid-passbook-icon-wrapper {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.7), 0 2px 6px rgba(0,0,0,0.06);
+  transition: transform 0.25s ease;
+}
+
+.kid-passbook-item:hover .kid-passbook-icon-wrapper {
+  transform: scale(1.12) rotate(6deg);
+}
+
+.passbook-type-credit .kid-passbook-icon-wrapper {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 2px solid #a7f3d0;
+}
+
+.passbook-type-debit .kid-passbook-icon-wrapper {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  border: 2px solid #fbcfe8;
+}
+
+.passbook-type-transfer .kid-passbook-icon-wrapper {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  border: 2px solid #ddd6fe;
+}
+
+.kid-passbook-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kid-passbook-badge.credit {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.kid-passbook-badge.debit {
+  background: #ffe4e6;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+}
+
+.kid-passbook-badge.transfer {
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+
+.kid-passbook-delta {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+
+.kid-passbook-pts {
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.kid-passbook-stamp {
+  margin-top: 0.25rem;
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: rotate(-4deg);
+}
+
+.kid-passbook-stamp.stamp-approved {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1.5px dashed #22c55e;
+}
+
+.kid-passbook-stamp.stamp-redeemed {
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1.5px dashed #f43f5e;
+}
+
+.kid-passbook-stamp.stamp-upgrade {
+  background: #faf5ff;
+  color: #7c3aed;
+  border: 1.5px dashed #a855f7;
+}
+
+/* Rubber Stamp Styling for Receipt Modal */
+.kid-rubber-stamp {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.75rem;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: stampSlam 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.kid-rubber-stamp.approved {
+  color: #16a34a;
+  border: 3px solid #16a34a;
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.kid-rubber-stamp.redeemed {
+  color: #e11d48;
+  border: 3px solid #e11d48;
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.kid-rubber-stamp.upgrade {
+  color: #7c3aed;
+  border: 3px solid #7c3aed;
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.kid-banner-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kid-banner-action-btn:hover {
+  background: #fef3c7;
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 8px rgba(217, 119, 6, 0.15);
+}
+
+.kid-banner-action-btn:active {
+  transform: scale(0.95);
+}
+
+/* Chore Chips Delightful Press */
+.tier-quick-chip {
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tier-quick-chip:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.tier-quick-chip:active {
+  transform: scale(0.92);
+}
+
+/* Start Tier Buttons Gleam Sweep */
+.btn-start-tier-action {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-start-tier-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.btn-start-tier-action::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: none;
+}
+
+.btn-start-tier-action:hover::after {
+  animation: shineSweep 1.2s ease-in-out infinite;
+}
+
+/* Scan Button Ripple Rings */
+.scan-ripple-ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 9999px;
+  border: 3px solid rgba(245, 158, 11, 0.45);
+  pointer-events: none;
+  animation: ripplePulse 3.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.scan-ripple-ring.ring-2 {
+  animation-delay: 1.6s;
+}
+
+/* Ready Exchange Glow Pulse */
+.btn-exchange.ready {
+  animation: readyPulse 2.2s infinite;
+}
+
+/* ========================================= */
+/* Print Styles                              */
+/* ========================================= */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  header, #topbar-kid-controls, #topbar-parent-controls, .print-hidden, #view-kid, .parent-tab-btn, .card-actions, #btn-print-chore-cards, #btn-switch-to-kid, .sound-toggle-btn {
+    display: none !important;
+  }
+  #view-parent, #tab-tokens {
+    display: block !important;
+  }
+  .printable-chore-token {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 2px dashed #475569 !important;
+  }
+  .btn-test-scan-token {
+    display: none !important;
+  }
+}
+

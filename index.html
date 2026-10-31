@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Starbook Kids - Gold Star Barcode Scanner & Reward System</title>
+  
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#F59E0B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Starbook">
+  <meta name="description" content="Kid-friendly Gold Star Barcode Scanner & Double-Entry Reward Banking System with local storage.">
+  
+  <!-- Tailwind CSS CDN for utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            star: {
+              gold: '#F59E0B',
+              silver: '#94A3B8',
+              bronze: '#EA580C',
+              primary: '#6366F1',
+              accent: '#EC4899',
+              fun: '#10B981'
+            }
+          },
+          fontFamily: {
+            kid: ['"Fredoka"', 'system-ui', '-apple-system', 'sans-serif'],
+            sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Font: Fredoka for playful kid typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-b from-amber-50 via-sky-50 to-indigo-50 min-h-screen text-slate-800 antialiased selection:bg-amber-300 selection:text-amber-900">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
